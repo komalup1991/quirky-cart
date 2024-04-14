@@ -1,10 +1,12 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
+import Notify from '../components/Notify'
 
 const Home = () => {
   return (
     <div>
-     <Navbar/>   
+    <Notify/>
+    <Navbar/>   
     </div>
   )
 }
