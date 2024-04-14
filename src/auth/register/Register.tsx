@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as registerApi from './registerApi';
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const Register = () => {
@@ -11,14 +11,15 @@ const Register = () => {
       const status = await registerApi.register(user);
       if (status === 200) {
         console.log("User registered");
-        navigate("/Profile");
+        navigate("/login");
       }
     } catch (e) {
       console.log(e);
     }
   };
   const login = async () => {
-    navigate("/Login");
+    console.log("KOMAL-S")
+    navigate("/login");
   };
 
 
