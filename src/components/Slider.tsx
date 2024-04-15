@@ -67,6 +67,9 @@ const Container = styled.div`
     position: relative;
     overflow: hidden;
     // background-color: coral;
+    @media only screen and (max-width: 380px) {
+      display: "none"
+    }
 `;
 const Arrow = styled.div<ArrowProps>`
   width: 50px;

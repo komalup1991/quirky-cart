@@ -9,7 +9,11 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 
 
 const Container = styled.div`
-    display: flex;`;
+    display: flex;
+    @media only screen and (max-width: 380px) {
+      flexDirection: "column"
+    }
+    `;
 
 const LeftPart = styled.div`
     display: flex;
@@ -20,6 +24,9 @@ const LeftPart = styled.div`
 
 const MiddlePart = styled.div`
     flex:  1;
+    @media only screen and (max-width: 380px) {
+      display: "none"
+    }
 `;
 
 const Heading = styled.h3`
@@ -41,6 +48,9 @@ const ListItem = styled.li`
 
 const RightPart = styled.div`
     flex: 1;
+    @media only screen and (max-width: 380px) {
+      backgroundColor: "#fff8f8"
+    }
 `;
 
 const Logo = styled.h1``;

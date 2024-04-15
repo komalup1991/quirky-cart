@@ -13,6 +13,9 @@ const Pic = styled.img`
     width: 100%;
     object-fit: cover;
     opacity: 0.8;
+    @media only screen and (max-width: 380px) {
+        height: "20vh" 
+      }
 `;
 
 const Details = styled.div`

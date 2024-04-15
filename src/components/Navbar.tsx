@@ -3,10 +3,14 @@ import { Search } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
+
 import styled from 'styled-components'
 const Container = styled.div`    
     height:60px;
     background-color: #f0f0f0; 
+    @media only screen and (max-width: 380px) {
+        height: "50px";
+      }   
 `
 
 const Wrapper = styled.div`
@@ -14,6 +18,9 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @media only screen and (max-width: 380px) {
+        padding: "10px 0px"
+      }  
 `
 
 const SearchContainer = styled.div`
@@ -24,14 +31,23 @@ const SearchContainer = styled.div`
 `
 const Input = styled.input`
     border: none;
+    @media only screen and (max-width: 380px) {
+        width: "50px"
+      }
 `
 const Logo = styled.h1`
     font-weight: bold;
+    @media only screen and (max-width: 380px) {
+        fontSize: "12px", marginLeft: "10px"
+      }
 `
 const MenuItem = styled.div`
     font-size: 14px;
     cursor: pointer;
     margin-left: 25px;
+    @media only screen and (max-width: 380px) {
+        flex: 2, justifyContent: "center"
+      }
 `
 const LeftDiv = styled.div`
     flex: 1;
@@ -51,6 +67,9 @@ const RightDiv = styled.div`
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    @media only screen and (max-width: 380px) {
+        flex: 2, justifyContent: "center"
+      }
 `
   
 
