@@ -15,7 +15,7 @@ const Notify = () => {
   return (
     <div>
         <Container>
-            Deals Deals Deals
+            Free Shipping over $50. Discounts available for new customers only.
         </Container>
     </div>
   )

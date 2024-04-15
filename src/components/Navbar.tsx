@@ -40,7 +40,7 @@ const LeftDiv = styled.div`
 `
 
 const MiddleDiv = styled.div`
-    flex: 1;
+    // flex: 1;
     display: flex;
     align-items: center;
     text-align: center;
