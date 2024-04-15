@@ -2,7 +2,9 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Notify from '../components/Notify'
 import Slider from '../components/Slider'
-import Categories from '../components/Categories'
+import Categories from '../components/CategoryList'
+import ProductList from '../components/ProductList'
+import Footer from '../components/Footer'
 
 const Home = () => {
   return (
@@ -11,6 +13,8 @@ const Home = () => {
     <Navbar/>   
     <Slider/>
     <Categories/>
+    <ProductList/>
+    <Footer/>
     </div>
   )
 }
