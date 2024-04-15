@@ -80,10 +80,10 @@ const Footer = () => {
             QUIRKY CART.
             </Logo>
             <About>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                Nulla at nunc nec nisl luctus tincidunt. 
-                Nullam tincidunt, nunc nec auctor malesuada, 
-                erat dolor vehicula justo, id cursus dolor odio ac arcu.
+            Quirky Cart is your one-stop destination for all things delightfully eccentric! 
+            From mugs adorned with witty puns to keyrings that double as tiny works of art, each product is carefully curated to add a dash of whimsy to your daily life. 
+            Whether you're sipping your morning brew from a mug that sparks joy or adding a touch of charm to your keys with a quirky keyring, Quirky Cart has something to make every moment a little more extraordinary. 
+            So, why settle for ordinary when you can embrace the delightfully quirky with Quirky Cart?
             </About>
             <Connect>
                 <Icons color="E4405F">
