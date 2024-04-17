@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Search} from '@mui/icons-material';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Link } from 'react-router-dom';
 
 
 
@@ -74,10 +75,13 @@ const ProductDetail:React.FC<ProductProps> = ({item}) => {
   return (
     <Container>
       <Bubble/>
-      <Pic src={item.img}/>
+      <Pic src={item.image}/>
       <Details>
         <IconList>
-        <Search/>
+          <Link  to={`/product/${item.id}`}>
+          <Search/>
+          </Link>
+       
         </IconList>
         <IconList>
         <ShoppingCartIcon/>

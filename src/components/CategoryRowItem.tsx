@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -56,11 +57,15 @@ const CategoryRowItem: React.FC<CategoryRowItemProps> = ({ item }) => {
   return (
    
         <Container>
+            <Link to = {`/products/${item.category}`}>
+
+           
             <Pic src={item.img}/>
             <Details>
                 <Heading>{item.title}</Heading>
                 <Button>SHOP NOW</Button>
             </Details>   
+            </Link>
         </Container>
   )
 }

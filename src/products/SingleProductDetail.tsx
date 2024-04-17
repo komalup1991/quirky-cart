@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
 import styled from 'styled-components'
@@ -6,6 +6,7 @@ import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import Notify from "../components/Notify"
 import ProductList from "../components/ProductList"
+import { useLocation } from 'react-router-dom';
 
 const Container = styled.div``;
 
@@ -128,6 +129,20 @@ const Button = styled.button`
   }
 `;
 const SingleProductDetail = () => {
+  const location = useLocation();
+  const productId = location.pathname.split("/")[2];
+  const [products, setProducts] = useState({});
+  useEffect(() => {
+    const fetchProducts = async ()=>{
+      try{
+        
+      }catch(err){
+        console.log(err)
+      }
+    }
+
+  },[productId]);
+
   return (
     <Container>
         <Navbar />
