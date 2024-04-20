@@ -2,9 +2,13 @@ import React from 'react'
 import { Search } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {store} from '../redux/store';
+import { RootState } from '../redux/store';
 
 
 import styled from 'styled-components'
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 const Container = styled.div`    
     height:60px;
     background-color: #f0f0f0; 
@@ -74,6 +78,8 @@ const RightDiv = styled.div`
   
 
 const Navbar = () => {
+    const quantity = useSelector((state: RootState) => state.shoppingCart.quantity); 
+    console.log(quantity);
   return (
     <Container>
         <Wrapper>
@@ -86,17 +92,23 @@ const Navbar = () => {
             </LeftDiv>
 
             <MiddleDiv>
+                <Link to="/"  style={{ textDecoration: 'none', color:"black" }}>
+               
                 <Logo>QUIRKY CART.</Logo>
+                </Link>
             </MiddleDiv>
 
             <RightDiv>
                 <MenuItem>REGISTER</MenuItem>
                 <MenuItem>SIGN IN</MenuItem>
+                <Link to="/shoppingCart">
                 <MenuItem>
-                    <Badge badgeContent={4} color="primary">
+                    <Badge badgeContent={quantity} color="primary">
                         <ShoppingCartIcon color="action" />
                     </Badge>
                 </MenuItem>
+                </Link>
+             
                
             </RightDiv>
 

@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useReducer, useState } from 'react'
 import styled from 'styled-components'
+import { login } from './ApiCalls';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const Container = styled.div` 
     width: 100vw;
@@ -56,11 +59,34 @@ const Button = styled.button`
     cursor: pointer;
     margin-bottom: 10px;
     margin-top: 10px;
+    &:disabled {
+        background-color: lightgray;
+        color: gray;
+        cursor: not-allowed;
+    }
+`;
+
+const Error = styled.span`
+  color: red;
 `;
 
 
 
+
+
 const Login = () => {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
+    const { isFetching, error } = useSelector((state:RootState) => state.user);
+
+    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        login(dispatch,{ username, password })
+        console.log(`Submitting username ${username} and password ${password}`);
+    };
+
+
   return (
     <Container>
         <Box>
@@ -68,11 +94,23 @@ const Login = () => {
             SIGN IN
         </Heading>
         <Form>
-            <Input type="text" placeholder="Username" />
-            <Input type="password" placeholder="Password" />
+            <Input 
+            type="text" 
+            placeholder="Username"
+            onChange={(e) => setUsername(e.target.value)}
+            
+            />
+            <Input 
+            type="password" 
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            
+            />
 
-            <Button>LOGIN</Button>
-            <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
+            <Button onClick={handleSubmit} disabled={isFetching} >LOGIN</Button>
+            {error && <Error>Something went wrong! Please try again..</Error>}
+            
+            <Link>FORGOT PASSWORD?</Link>
             <Link>CREATE A NEW ACCOUNT</Link>
         </Form>
     </Box>

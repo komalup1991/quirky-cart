@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import styled from 'styled-components'
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import Notify from "../components/Notify"
 import ProductList from "../components/ProductList"
 import { useLocation } from 'react-router-dom';
+import { publicRequest } from '../auth/AllApi';
+import {ProductInterface} from '../components/ProductList';
+import { addProduct } from '../redux/shoppingCartRedux';
+import { useDispatch } from 'react-redux';
 
 const Container = styled.div``;
 
@@ -34,6 +38,8 @@ const Pic = styled.img`
 const ProductInfoBox = styled.div`
   flex: 1;
   padding: 0px 50px;
+  // border: 1px solid lightgray;
+  // margin-left: 20px;
   @media only screen and (max-width: 380px) {
     padding: "10px" 
   }
@@ -128,21 +134,30 @@ const Button = styled.button`
       background-color: #f8f4f4;
   }
 `;
-const SingleProductDetail = () => {
+const SingleProductDetail: React.FC = () => {
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
-  const [products, setProducts] = useState({});
+  const [products, setProducts] = useState<ProductInterface | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchProducts = async ()=>{
       try{
+        const res = await publicRequest.get(`/products/find/${productId}`);
+        setProducts(res.data);
         
       }catch(err){
         console.log(err)
       }
     }
-
+    fetchProducts();
   },[productId]);
 
+  const addToCart = () => {
+    dispatch(
+      addProduct({ ...products, quantity })
+    );
+  }
   return (
     <Container>
         <Navbar />
@@ -150,43 +165,35 @@ const SingleProductDetail = () => {
         
         <Box>
             <PicBox>
-                <Pic src="https://images.unsplash.com/photo-1598271174562-9fc1a9ba18ee?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHBvdHRlcnl8ZW58MHx8MHx8fDA%3D" alt="product"/>
+                <Pic src={products?.image}/>
             </PicBox>
             <ProductInfoBox>
                 <Heading>
-                    Mug
+                   {products?.name}
                 </Heading>
                 <Description>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Sed ut metus eget ligula convallis luctus. 
-                    Nullam et ligula in
+                    {products?.description}
                 </Description>
-                <Price>$ 18</Price>
+                <Price>$ {products?.price}</Price>
                 <ActionBox>
             <Action>
               <ActionLabel>Color</ActionLabel>
-              <ActionCategory color="black" />
-              <ActionCategory color="darkblue" />
-              <ActionCategory color="gray" />
+              <ActionCategory color={products?.color} />
             </Action>
             <Action>
               <ActionLabel>Size</ActionLabel>
               <ActionPrice>
-                <PriceOption>XS</PriceOption>
-                <PriceOption>S</PriceOption>
-                <PriceOption>M</PriceOption>
-                <PriceOption>L</PriceOption>
-                <PriceOption>XL</PriceOption>
+                <PriceOption>{products?.size}</PriceOption>
               </ActionPrice>
             </Action>
           </ActionBox>
           <AddContainer>
             <AmountContainer>
-              <RemoveShoppingCartIcon />
-              <Amount>1</Amount>
-              <AddShoppingCartIcon />
+              <RemoveIcon onClick={()=>{quantity > 1 && setQuantity(quantity - 1)}}/>
+              <Amount>{quantity}</Amount>
+              <AddIcon onClick={()=>{setQuantity(quantity + 1)}}/>
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick={addToCart}>ADD TO CART</Button>
           </AddContainer>
             </ProductInfoBox>
         </Box>

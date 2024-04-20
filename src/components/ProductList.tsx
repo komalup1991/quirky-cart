@@ -15,7 +15,7 @@ interface ProductListProps {
     sort: string;
   }
 
-  interface Product {
+ export  interface ProductInterface {
     id: number;
     name: string;
     description: string;
@@ -33,7 +33,7 @@ interface ProductListProps {
 const ProductList:React.FC<ProductListProps>= ({category, filters, sort}) => {
     // console.log(category, filters, sort);
     const [products, setProducts] = useState([]);
-    const [filterProducts, setFilterProducts] = useState<Product[]>([]);
+    const [filterProducts, setFilterProducts] = useState<ProductInterface[]>([]);
     useEffect(()=>{
         const getProducts = async () => {
         try{
@@ -56,7 +56,7 @@ const ProductList:React.FC<ProductListProps>= ({category, filters, sort}) => {
         category 
         && 
         setFilterProducts(
-            products.filter((item:Product[])=> 
+            products.filter((item:ProductInterface[])=> 
                 Object.entries(filters).every(([key, value])=> 
                     (item as any)[key].includes(value)
                 )

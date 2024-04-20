@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import Notify from '../components/Notify';
 import Footer from '../components/Footer';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import StripeCheckout from 'react-stripe-checkout';
+// import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Token } from 'react-stripe-checkout'; 
+import { loggedInUserRequest } from '../auth/AllApi';
+
+
+const KEY = process.env.REACT_APP_STRIPE_KEY || '';
 
 const Container = styled.div``;
 
@@ -28,6 +38,7 @@ const Start = styled.div`
 
 const StartButton = styled.button`
     padding: 10px;
+    margin: 10px;
     font-weight: 600;
     cursor: pointer;
     border: ${(props) => props.type === 'submit' && 'none'};
@@ -131,7 +142,7 @@ const Hr = styled.hr`
     height: 1px;
 `;
 
-const Summary = styled.div`
+const CustomSummary = styled.div`
     flex: 1;
     border: 0.5px solid lightgray;
     border-radius: 10px;
@@ -139,11 +150,11 @@ const Summary = styled.div`
     height: 50vh;
 `;
 
-const SummaryTitle = styled.h1`
+const CustomSummaryTitle = styled.h1`
     font-weight: 200;
 `;
 
-const SummaryItem = styled.div<{ type?: string }>`
+const CustomSummaryItem = styled.div<{ type?: string }>`
     margin: 30px 0px;
     display: flex;
     justify-content: space-between;
@@ -151,11 +162,11 @@ const SummaryItem = styled.div<{ type?: string }>`
     font-size: ${(props) => props.type === 'total' && '24px'};
 `;
 
-const SummaryItemText = styled.span``;
+const CustomSummaryItemText = styled.span``;
 
-const SummaryItemPrice = styled.span``;
+const CustomSummaryItemPrice = styled.span``;
 
-const Button = styled.button`
+const CustomButton = styled.button`
     width: 100%;
     padding: 10px;
     background-color: black;
@@ -164,7 +175,56 @@ const Button = styled.button`
 `;
 
 const ShoppingCart = () => {
-    return (
+    
+    const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
+    const [stripeToken, setStripeToken] = useState<Token | null>(null);
+    const navigate = useNavigate();
+    const [message, setMessage] = useState("");
+
+
+      const onToken = (token: Token) => {
+        setStripeToken(token);
+    };
+    // useEffect(() => {
+    //     if (stripeToken) {
+    //       const makeRequest = async () => {
+    //         try {
+    //           const res = await loggedInUserRequest.post("/checkout/pay", {
+    //             tokenId: stripeToken.id,
+    //             amount: shoppingCart.total * 100,
+    //           });
+    //           navigate('/paymentSuccess', {
+    //             state: {
+    //               stripeData: res.data,
+    //               products: shoppingCart
+    //             }
+    //           });
+              
+    //         } catch (error) {
+    //           console.error("Payment failed:", error);
+             
+    //         }
+    //       };
+    //       stripeToken && makeRequest();
+    //     }
+    //   }, [stripeToken, shoppingCart.total, navigate, shoppingCart]);
+    useEffect(() => {
+        // Check to see if this is a redirect back from Checkout
+        const query = new URLSearchParams(window.location.search);
+    
+        if (query.get("success")) {
+          setMessage("Order placed! You will receive an email confirmation.");
+        }
+    
+        if (query.get("canceled")) {
+          setMessage(
+            "Order canceled -- continue to shop around and checkout when you're ready."
+          );
+        }
+      }, []);
+      
+console.log(message);
+    return   (
         <Container>
             <Navbar />
             <Notify />
@@ -180,78 +240,80 @@ const ShoppingCart = () => {
                 </Start>
                 <End>
                     <About>
+                        
+                            {shoppingCart.products.map((product) => (
                         <Product>
                             <ProductDetail>
-                                <Pic src="https://images.unsplash.com/photo-1542556398-3c9a71885fab?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fG11Z3N8ZW58MHx8MHx8fDA%3D" />
+                                <Pic src={product.image} alt="" />
                                 <Details>
                                     <ProductName>
-                                        <b>Product:</b> FILL ME MUG
+                                        <b>Product:</b> {product.name}
                                     </ProductName>
                                     <ProductId>
-                                        <b>ID:</b> 93813718293
+                                        <b>ID:</b> {product.id}
                                     </ProductId>
-                                    <ProductColor color="white" />
+                                    <ProductColor color={product.color} />
                                     <ProductSize>
-                                        <b>Size:</b> L
+                                        <b>Size:</b>{product.size}
                                     </ProductSize>
                                 </Details>
                             </ProductDetail>
                             <PriceDetail>
                                 <ProductAmountContainer>
                                     <AddIcon />
-                                    <ProductAmount>2</ProductAmount>
+                                    <ProductAmount>{shoppingCart.quantity}</ProductAmount>
                                     <RemoveIcon />
                                 </ProductAmountContainer>
-                                <ProductPrice>$ 30</ProductPrice>
+                                <ProductPrice>$ {product.price* shoppingCart.quantity}</ProductPrice>
                             </PriceDetail>
                         </Product>
+                           )) }
                         <Hr />
-                        <Product>
-                            <ProductDetail>
-                                <Pic src="https://images.unsplash.com/photo-1554200877-40aae1bb6ec1?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjN8fG11Z3N8ZW58MHx8MHx8fDA%3D" />
-                                <Details>
-                                    <ProductName>
-                                        <b>Product:</b> FUTURE MUG
-                                    </ProductName>
-                                    <ProductId>
-                                        <b>ID:</b> 93813718293
-                                    </ProductId>
-                                    <ProductColor color="white" />
-                                    <ProductSize>
-                                        <b>Size:</b> L
-                                    </ProductSize>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <AddIcon />
-                                    <ProductAmount>1</ProductAmount>
-                                    <RemoveIcon />
-                                </ProductAmountContainer>
-                                <ProductPrice>$ 20</ProductPrice>
-                            </PriceDetail>
-                        </Product>
+                       
                     </About>
-                    <Summary>
-                        <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-                        <SummaryItem>
-                            <SummaryItemText>Subtotal</SummaryItemText>
-                            <SummaryItemPrice>$ 80</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Estimated Shipping</SummaryItemText>
-                            <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Shipping Discount</SummaryItemText>
-                            <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem type="total">
-                            <SummaryItemText>Total</SummaryItemText>
-                            <SummaryItemPrice>$ 80</SummaryItemPrice>
-                        </SummaryItem>
-                        <Button>CHECKOUT NOW</Button>
-                    </Summary>
+                    <CustomSummary>
+                    <CustomSummaryTitle>ORDER SUMMARY</CustomSummaryTitle>
+                    <CustomSummaryItem>
+                        <CustomSummaryItemText>Subtotal</CustomSummaryItemText>
+                        <CustomSummaryItemPrice>$ {shoppingCart.total}</CustomSummaryItemPrice>
+                    </CustomSummaryItem>
+                    {shoppingCart.total <= 50 && (
+                        <CustomSummaryItem>
+                            <CustomSummaryItemText>Estimated Shipping</CustomSummaryItemText>
+                            <CustomSummaryItemPrice>$ 5.90</CustomSummaryItemPrice>
+                        </CustomSummaryItem>
+                    )}
+                    {shoppingCart.total <= 50 && (
+                        <CustomSummaryItem type="total">
+                            <CustomSummaryItemText>Total (including shipping)</CustomSummaryItemText>
+                            <CustomSummaryItemPrice>$ {shoppingCart.total + 5.90}</CustomSummaryItemPrice>
+                        </CustomSummaryItem>
+                    )}
+                    {shoppingCart.total > 50 && (
+                        <CustomSummaryItem>
+                            <CustomSummaryItemText>Shipping Discount</CustomSummaryItemText>
+                            <CustomSummaryItemPrice>$ -5.90</CustomSummaryItemPrice>
+                        </CustomSummaryItem>
+                    )}
+                    {shoppingCart.total > 50 && (
+                        <CustomSummaryItem type="total">
+                            <CustomSummaryItemText>Total</CustomSummaryItemText>
+                            <CustomSummaryItemPrice>$ {shoppingCart.total}</CustomSummaryItemPrice>
+                        </CustomSummaryItem>
+                    )}
+                      <StripeCheckout 
+  name="QUIRKY CART"
+  image="https://images.unsplash.com/photo-1679331417433-795c3d411ba4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDE2fF84ekZIdWhSaHlvfHxlbnwwfHx8fHw%3D"
+  billingAddress
+  shippingAddress
+  description={`Your total is $${shoppingCart.total <= 50 ? shoppingCart.total + 5.90 : shoppingCart.total}`}
+  amount={(shoppingCart.total <= 50 ? (shoppingCart.total + 5.90) : shoppingCart.total) * 100}
+  token={onToken}
+  stripeKey={KEY}
+/>
+   <CustomButton>CHECKOUT NOW</CustomButton>
+                </CustomSummary>
+
                 </End>
             </Box>
             <Footer />
