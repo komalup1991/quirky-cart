@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const BASE_API_URL = "http://localhost:4000/api/";
+const BASE_API_URL = process.env.BASE_API_URL;
+const API = `${BASE_API_URL}/api/`;
+
+
 
 let JWT_TOKEN = '';
 try {
@@ -19,10 +22,10 @@ try {
 }
 
 export const publicRequest = axios.create({
-    baseURL: BASE_API_URL,
+    baseURL: API,
 });
 
 export const loggedInUserRequest = axios.create({
-    baseURL: BASE_API_URL,
+    baseURL: API,
     headers: { token: `Bearer ${JWT_TOKEN}` },
 });
