@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define a type for the product item
-interface Product {
+export interface ProductInterface {
   id: string;
   name: string;
   description: string;
@@ -12,11 +12,12 @@ interface Product {
   rating: number;
   size: string;
   color: string;
+  
 }
 
 // Define the initial state type
 interface ProductState {
-  products: Product[];
+  products: ProductInterface[];
   isFetching: boolean;
   error: boolean;
 }
@@ -36,7 +37,7 @@ export const productSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    getProductSuccess: (state, action: PayloadAction<Product[]>) => {
+    getProductSuccess: (state, action: PayloadAction<ProductInterface[]>) => {
       state.isFetching = false;
       state.products = action.payload;
     },
@@ -65,7 +66,7 @@ export const productSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    updateProductSuccess: (state, action: PayloadAction<{id: string, product: Product}>) => {
+    updateProductSuccess: (state, action: PayloadAction<{id: string, product: ProductInterface}>) => {
       state.isFetching = false;
       const index = state.products.findIndex(product => product.id === action.payload.id);
       if (index !== -1) {
@@ -81,7 +82,7 @@ export const productSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    addProductSuccess: (state, action: PayloadAction<Product>) => {
+    addProductSuccess: (state, action: PayloadAction<ProductInterface>) => {
       state.isFetching = false;
       state.products.push(action.payload);
     },

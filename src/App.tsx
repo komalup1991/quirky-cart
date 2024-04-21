@@ -12,22 +12,25 @@ import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 
 // Import admin components
-import Topbar from './components/adminComponents/Topbar';
-// import Sidebar from './components/Sidebar';
+import AdminNavbar from './components/adminComponents/AdminNavbar';
+import AdminHome from './admin/adminHome';
+import AddProduct from './admin/addProduct';
+import AdminSidebar from './components/adminComponents/AdminSidebar';
 // import UserList from './admin/UserList';
 // import User from './admin/User';
-// import NewUser from './admin/NewUser';
-// import ProductList from './admin/ProductList';
-// import Product from './admin/Product';
-// import NewProduct from './admin/NewProduct';
+import AddUser  from './admin/addUser';
+import Navbar from './components/Navbar';
+import AdminAllProducts from './admin/allProducts';
+import HandleProducts from './admin/handleProducts';
+
 
 
 
 const App = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const userDetail = useSelector((state: RootState) => state.user);
-  console.log("user: ", JSON.stringify(user));
-  console.log("userAdmin: " + user?.role);
+  // console.log("user: ", JSON.stringify(user));
+  console.log("userAdmin: " , userDetail.currentUser);
 
   const isAdmin = user && user.role === 'admin';
 
@@ -39,14 +42,17 @@ const App = () => {
         
         {isAdmin && (
           <>
-          <Route path="/" element={<Topbar />} />
-          {/* <Route path="/admin" element={<Topbar />} />            
-          <Route path="/users" element={<UserList />} />
-          <Route path="/user/:userId" element={<User />} />
-          <Route path="/newUser" element={<NewUser />} />
-          <Route path="/products" element={<ProductList />} />
-          <Route path="/product/:productId" element={<Product />} />
-          <Route path="/newproduct" element={<NewProduct />} />   */}
+          
+          <Route path="/" element={<AdminHome />} />
+          
+          <Route path="/addUser" element={<><Navbar/><AdminNavbar /><AdminSidebar/><AddUser /></>} />
+             
+          {/* <Route path="/users" element={<UserList />} />
+          <Route path="/user/:userId" element={<User />} />*/}
+          
+          <Route path="/products" element={<AdminAllProducts />} /> 
+          <Route path="/product/:productId" element={<HandleProducts />} />
+          <Route path="/addProduct" element={<AddProduct />} />   
           </>
         )}
         <Route path="/" element={<Home />} />

@@ -80,12 +80,12 @@ width: 40px;
     border-radius: 50%;
     cursor: pointer;
 `;
-const Topbar = () => {
+const AdminNavbar = () => {
   return (
     <Container>
       <Box>
         <LeftDiv>
-        <Logo>QUIRKY CART.</Logo>
+        {/* <Logo>QUIRKY CART.</Logo> */}
         </LeftDiv>
         <RightDiv>
           <IconBox>
@@ -106,4 +106,4 @@ const Topbar = () => {
   )
 }
 
-export default Topbar
+export default AdminNavbar

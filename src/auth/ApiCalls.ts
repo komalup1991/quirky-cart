@@ -95,7 +95,7 @@ export const getProducts = async (dispatch:Dispatch) => {
 export const deleteProduct = async (id:string, dispatch:Dispatch) => {
   dispatch(deleteProductStart());
   try {
-    // const res = await userRequest.delete(`/products/${id}`);
+    const res = await loggedInUserRequest.delete(`/products/${id}`);
     dispatch(deleteProductSuccess(id));
   } catch (err) {
     dispatch(deleteProductFailure());
@@ -105,7 +105,7 @@ export const deleteProduct = async (id:string, dispatch:Dispatch) => {
 export const updateProduct = async (id:string, product:Product, dispatch:Dispatch) => {
   dispatch(updateProductStart());
   try {
-    // update
+    const res = await loggedInUserRequest.put(`/products/${id}`);
     dispatch(updateProductSuccess({ id, product }));
   } catch (err) {
     dispatch(updateProductFailure());
@@ -114,7 +114,8 @@ export const updateProduct = async (id:string, product:Product, dispatch:Dispatc
 export const addProduct = async (product:Product, dispatch:Dispatch) => {
   dispatch(addProductStart());
   try {
-    const res = await loggedInUserRequest.post(`/products`, product);
+    
+    const res = await loggedInUserRequest.post(`products/addProduct`, product);
     dispatch(addProductSuccess(res.data));
   } catch (err) {
     dispatch(addProductFailure());
