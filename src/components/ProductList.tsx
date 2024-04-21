@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import ProductDetail from './ProductDetail'
 import axios from 'axios';
-
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+const API = `${BASE_API_URL}/api/`;
 const Container = styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -41,9 +42,11 @@ const ProductList:React.FC<ProductListProps>= ({category, filters, sort}) => {
 
             const res = await axios.get(
                 category ? 
-                `http://localhost:4000/api/products?category=${category}`
-                : 'http://localhost:4000/api/products'
+                `${API}products?category=${category}`
+                : `${API}products`
            ); 
+
+
            
            setProducts(res.data);
         } catch(err){
