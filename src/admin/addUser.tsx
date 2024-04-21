@@ -1,64 +1,87 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import AdminSidebar from '../components/adminComponents/AdminSidebar';
 import AdminNavbar from '../components/adminComponents/AdminNavbar';
-const AddUser = styled.div` {
-    flex: 4;
-  }`;
-  
- const AddUserForm = styled.form` {
-    display: flex;
-    flex-wrap: wrap;
-  }`;
-  
-  const AddUserItem = styled.div` {
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    margin-right: 20px;
-  }`;
-  
-  const AddUserItemLabel= styled.label` {
-    margin-bottom: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    color: rgb(151, 150, 150);
-  }`;
-  
-  const AddUserItemInput = styled.input` {
-    height: 20px;
-    padding: 10px;
-    border: 1px solid gray;
-    border-radius: 5px;
-  }`;
-  
-const AddUserGenderInput = styled.input`
-    margin-top: 15px;
-    `;
-  
-const AddUserGenderLabel = styled.label`
-      margin: 10px;
-      font-size: 18px;
-      color: #555;
-  `;
-  
-const AddUserSelect = styled.select`
-      height: 40px;
-      border-radius: 5px;
+
+const Layout = styled.div`
+  display: flex;
+  height: 100vh;
 `;
-  
-const AddUserButton = styled.button`
-      width: 200px;
-      border: none;
-      background-color: darkblue;
-      color: white;
-      padding: 7px 10px;
-      font-weight: 600;
-      border-radius: 10px;
-      margin-top: 30px;
-      cursor: pointer;
+
+
+
+const FormContainer = styled.div`
+flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const FormTitle = styled.h1`
+  font-size: 24px;
+  color: #333;
+`;
+
+const FormItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #666;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+`;
+
+const Select = styled.select`
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  width: 150px;
+  padding: 10px;
+  border: none;
+  background-color: #0056b3;
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  align-self: start;
+  &:hover {
+    background-color: #004494;
+  }
+`;
+
+const GenderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+const GenderInput = styled.input`
+  margin-right: 10px;
+`;
+
+const GenderLabel = styled.label`
+  margin-right: 20px;
+  font-size: 16px;
 `;
 const Left = styled.div`
     flex: 1;
@@ -68,10 +91,7 @@ const Right = styled.div`
     `;
     const Box = styled.div`
     display: flex;`;
-const NewUserGender = styled.div`
-    display: flex;
-    align-items: center;
-    `;
+
 const addUser = () => {
   return (
     <div>
@@ -82,58 +102,59 @@ const addUser = () => {
      <AdminSidebar/>
      </Left>
      <Right>
-    <AddUser>
-    <h1 className="newUserTitle">New User</h1>
-    <AddUserForm>
-      <AddUserItem>
-        <AddUserItemLabel>Username</AddUserItemLabel>
-        <AddUserItemInput type="text" placeholder="john" />
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserItemLabel>Full Name</AddUserItemLabel>
-        <AddUserItemInput type="text" placeholder="John Smith" />
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserItemLabel>Email</AddUserItemLabel>
-        <AddUserItemInput type="email" placeholder="john@gmail.com" />
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserItemLabel>Password</AddUserItemLabel>
-        <AddUserItemInput type="password" placeholder="password" />
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserItemLabel>Phone</AddUserItemLabel>
-        <AddUserItemInput type="text" placeholder="+1 123 456 78" />
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserItemLabel>Address</AddUserItemLabel>
-        <AddUserItemInput type="text" placeholder="New York | USA" />
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserGenderLabel>Gender</AddUserGenderLabel>
-        <NewUserGender>
-          <AddUserGenderInput type="radio" name="gender" id="male" value="male" />
-          <AddUserGenderLabel htmlFor="male">Male</AddUserGenderLabel>
-          <AddUserGenderInput type="radio" name="gender" id="female" value="female" />
-          <AddUserGenderLabel htmlFor="female">Female</AddUserGenderLabel>
-          <AddUserGenderInput type="radio" name="gender" id="other" value="other" />
-          <AddUserGenderLabel htmlFor="other">Other</AddUserGenderLabel>
-        </NewUserGender>
-      </AddUserItem>
-      <AddUserItem>
-        <AddUserItemLabel>Active</AddUserItemLabel>
-        <AddUserSelect>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </AddUserSelect>
-      </AddUserItem>
-      <AddUserButton>Create</AddUserButton>
-    </AddUserForm>
-  </AddUser>
-  </Right>
+        <FormContainer>
+          <FormTitle>New User</FormTitle>
+          <Form>
+            <FormItem>
+              <Label>Username</Label>
+              <Input type="text" placeholder="john" />
+            </FormItem>
+            <FormItem>
+              <Label>Full Name</Label>
+              <Input type="text" placeholder="John Smith" />
+            </FormItem>
+            <FormItem>
+              <Label>Email</Label>
+              <Input type="email" placeholder="john@gmail.com" />
+            </FormItem>
+            <FormItem>
+              <Label>Password</Label>
+              <Input type="password" placeholder="password" />
+            </FormItem>
+            <FormItem>
+              <Label>Phone</Label>
+              <Input type="text" placeholder="+1 123 456 7890" />
+            </FormItem>
+            <FormItem>
+              <Label>Address</Label>
+              <Input type="text" placeholder="New York | USA" />
+            </FormItem>
+            <FormItem>
+              <Label>Gender</Label>
+              <GenderContainer>
+                <GenderInput type="radio" name="gender" id="male" value="male" />
+                <GenderLabel htmlFor="male">Male</GenderLabel>
+                <GenderInput type="radio" name="gender" id="female" value="female" />
+                <GenderLabel htmlFor="female">Female</GenderLabel>
+                <GenderInput type="radio" name="gender" id="other" value="other" />
+                <GenderLabel htmlFor="other">Other</GenderLabel>
+              </GenderContainer>
+            </FormItem>
+            <FormItem>
+              <Label>Active</Label>
+              <Select>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </Select>
+            </FormItem>
+            <Button type="submit">Create</Button>
+          </Form>
+        </FormContainer>
+      </Right>
+      
     </Box>
     </div>
-  )
+  );
 }
 
-export default addUser
+export default addUser;

@@ -35,6 +35,7 @@ const Box = styled.div`
 
 const AdminHome: React.FC = () => {
     const [userStats, setUserStats] = useState<UserStat[]>([]);
+    console.log(userStats);
 
     const MONTHS = useMemo(
       () => [

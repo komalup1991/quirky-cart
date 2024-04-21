@@ -101,8 +101,16 @@ const Navbar = () => {
         <Container>
             <Wrapper>
                 <LeftDiv>
-                    <Pic src="https://t4.ftcdn.net/jpg/05/99/64/79/240_F_599647918_bmfbrXIWjwB7mOiWvH85F9iIwijsDjkd.jpg" />
-                    WELCOME {user.currentUser?.username}
+                <Link to="#" style={{ textDecoration: 'none', color: "black" }}>
+                <Pic src="https://t4.ftcdn.net/jpg/05/99/64/79/240_F_599647918_bmfbrXIWjwB7mOiWvH85F9iIwijsDjkd.jpg" />
+                    </Link>
+                    
+                    { user.currentUser === null ? (
+  ""
+) : (
+  <span>WELCOME, {user.currentUser?.username}</span>
+)}
+
                     <SearchContainer>
                         <Input />
                         <Search style={{ color: "gray", fontSize: 16 }} />

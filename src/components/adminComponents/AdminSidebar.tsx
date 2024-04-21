@@ -97,14 +97,19 @@ const AdminSidebar = () => {
                 Products
               </AdminSidebarListItem>
             </Link>
+            <Link to="/addUser" className="link">
             <AdminSidebarListItem>
               <AttachMoney className="sidebarIcon" />
-              Transactions
+              Add New User
             </AdminSidebarListItem>
+            </Link>
+            <Link to="/addProduct" className="link">
             <AdminSidebarListItem>
               <BarChart className="sidebarIcon" />
-              Reports
+              Add New Product
             </AdminSidebarListItem>
+            </Link>
+          
           </AdminSidebarList>
         </AdminSidebarMenu>
         <AdminSidebarMenu>
