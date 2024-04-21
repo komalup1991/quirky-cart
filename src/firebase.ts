@@ -8,7 +8,7 @@ const FIREBASE_API_KEY = process.env.FIREBASE_API_KEY;
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: FIREBASE_API_KEY,
+  apiKey: "AIzaSyBckSwqdHCGVTQdDmyvAOwHnCho8FXnYL0", //FIREBASE_API_KEY,
   authDomain: "quirkycart-bb4aa.firebaseapp.com",
   projectId: "quirkycart-bb4aa",
   storageBucket: "quirkycart-bb4aa.appspot.com",
