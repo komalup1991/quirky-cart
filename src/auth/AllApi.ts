@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_API_URL = process.env.BASE_API_URL;
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 const API = `${BASE_API_URL}/api/`;
 
 
@@ -22,10 +22,11 @@ try {
 }
 
 export const publicRequest = axios.create({
-    baseURL: `${API}`,
-});
+  baseURL: API,
+}   
+);
 
 export const loggedInUserRequest = axios.create({
-    baseURL:  `${API}`,
+    baseURL:  API,
     headers: { token: `Bearer ${JWT_TOKEN}` },
 });
