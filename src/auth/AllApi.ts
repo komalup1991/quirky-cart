@@ -22,10 +22,10 @@ try {
 }
 
 export const publicRequest = axios.create({
-    baseURL: API,
+    baseURL: `${API}`,
 });
 
 export const loggedInUserRequest = axios.create({
-    baseURL: API,
+    baseURL:  `${API}`,
     headers: { token: `Bearer ${JWT_TOKEN}` },
 });
