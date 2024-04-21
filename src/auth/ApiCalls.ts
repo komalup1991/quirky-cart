@@ -1,4 +1,4 @@
-import { loginFailure, loginStart, loginSuccess, logoutSuccess } from "../redux/userRedux";
+import { deleteUserFailure, deleteUserStart, deleteUserSuccess, getUserFailure, getUserStart, getUserSuccess, loginFailure, loginStart, loginSuccess, logoutSuccess } from "../redux/userRedux";
 import { publicRequest, loggedInUserRequest } from "./AllApi";
 import { Dispatch } from "redux";
 import { Navigate } from "react-router-dom";
@@ -122,4 +122,23 @@ export const addProduct = async (product:Product, dispatch:Dispatch) => {
   }
 };
 
+export const getUsers = async (dispatch:Dispatch) => {
+  dispatch(getUserStart());
+  try {
+    const res = await loggedInUserRequest.get("/users/all");
+    console.log("hey",JSON.stringify(res.data));
+    dispatch(getUserSuccess(res.data));
+  } catch (err) {
+    dispatch(getUserFailure());
+  }
+};
 
+export const deleteUser = async (id:string, dispatch:Dispatch) => {
+  dispatch(deleteUserStart());
+  try {
+    const res = await loggedInUserRequest.delete(`/users/${id}`);
+    dispatch(deleteUserSuccess(id));
+  } catch (err) {
+    dispatch(deleteUserFailure());
+  }
+};

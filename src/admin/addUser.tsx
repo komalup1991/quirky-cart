@@ -1,5 +1,8 @@
 import React from 'react'
 import styled from 'styled-components';
+import Navbar from '../components/Navbar';
+import AdminSidebar from '../components/adminComponents/AdminSidebar';
+import AdminNavbar from '../components/adminComponents/AdminNavbar';
 const AddUser = styled.div` {
     flex: 4;
   }`;
@@ -57,8 +60,28 @@ const AddUserButton = styled.button`
       margin-top: 30px;
       cursor: pointer;
 `;
+const Left = styled.div`
+    flex: 1;
+    `;
+const Right = styled.div`
+    flex: 4;
+    `;
+    const Box = styled.div`
+    display: flex;`;
+const NewUserGender = styled.div`
+    display: flex;
+    align-items: center;
+    `;
 const addUser = () => {
   return (
+    <div>
+    <Navbar/>
+ <AdminNavbar/>
+ <Box>
+     <Left>
+     <AdminSidebar/>
+     </Left>
+     <Right>
     <AddUser>
     <h1 className="newUserTitle">New User</h1>
     <AddUserForm>
@@ -87,15 +110,15 @@ const addUser = () => {
         <AddUserItemInput type="text" placeholder="New York | USA" />
       </AddUserItem>
       <AddUserItem>
-        <label>Gender</label>
-        <div className="newUserGender">
+        <AddUserGenderLabel>Gender</AddUserGenderLabel>
+        <NewUserGender>
           <AddUserGenderInput type="radio" name="gender" id="male" value="male" />
           <AddUserGenderLabel htmlFor="male">Male</AddUserGenderLabel>
           <AddUserGenderInput type="radio" name="gender" id="female" value="female" />
           <AddUserGenderLabel htmlFor="female">Female</AddUserGenderLabel>
           <AddUserGenderInput type="radio" name="gender" id="other" value="other" />
           <AddUserGenderLabel htmlFor="other">Other</AddUserGenderLabel>
-        </div>
+        </NewUserGender>
       </AddUserItem>
       <AddUserItem>
         <AddUserItemLabel>Active</AddUserItemLabel>
@@ -107,6 +130,9 @@ const addUser = () => {
       <AddUserButton>Create</AddUserButton>
     </AddUserForm>
   </AddUser>
+  </Right>
+    </Box>
+    </div>
   )
 }
 

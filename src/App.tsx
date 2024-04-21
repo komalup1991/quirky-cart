@@ -16,8 +16,8 @@ import AdminNavbar from './components/adminComponents/AdminNavbar';
 import AdminHome from './admin/adminHome';
 import AddProduct from './admin/addProduct';
 import AdminSidebar from './components/adminComponents/AdminSidebar';
-// import UserList from './admin/UserList';
-// import User from './admin/User';
+import AdminAllUsers from './admin/allUsers';
+import HandleUsers from './admin/handleUsers';
 import AddUser  from './admin/addUser';
 import Navbar from './components/Navbar';
 import AdminAllProducts from './admin/allProducts';
@@ -45,10 +45,10 @@ const App = () => {
           
           <Route path="/" element={<AdminHome />} />
           
-          <Route path="/addUser" element={<><Navbar/><AdminNavbar /><AdminSidebar/><AddUser /></>} />
+          <Route path="/addUser" element={<AddUser />} />
              
-          {/* <Route path="/users" element={<UserList />} />
-          <Route path="/user/:userId" element={<User />} />*/}
+           <Route path="/users" element={<AdminAllUsers />} />
+          <Route path="/user/:userId" element={<HandleUsers />} />
           
           <Route path="/products" element={<AdminAllProducts />} /> 
           <Route path="/product/:productId" element={<HandleProducts />} />

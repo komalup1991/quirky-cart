@@ -44,6 +44,8 @@ const Left = styled.div`
 const Right = styled.div`
     flex: 4;
     `;
+    const Box = styled.div`
+    display: flex;`;
 export default function AllProducts() {
   const dispatch = useDispatch();
   const products = useSelector((state: RootState) => state.product.products);
@@ -55,8 +57,7 @@ export default function AllProducts() {
   const handleDelete = (id: string) => {
     deleteProduct(id, dispatch);
   };
-  const Box = styled.div`
-    display: flex;`;
+ 
 
   const columns = [
     { field: "id", headerName: "ID", width: 220 },
