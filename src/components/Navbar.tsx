@@ -6,6 +6,9 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../auth/ApiCalls';
+import { useEffect, useState } from 'react';
+import { loggedInUserRequest } from '../auth/AllApi';
+import { User } from '../redux/userRedux';
 
 const Container = styled.div`    
     height: 60px;
@@ -91,21 +94,23 @@ const Pic = styled.img`
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const quantity = useSelector((state: RootState) => state.shoppingCart.quantity);
+    const quantity = useSelector((state: RootState) => state.shoppingCart.totalQuantity);
     const user = useSelector((state: RootState) => state.user);
-    console.log(quantity);
+    
+
     const handleLogout = () => {
         logout(dispatch, navigate);
     };
+    const userId = user.currentUser?.id;
     return (
         <Container>
             <Wrapper>
                 <LeftDiv>
-                <Link to="#" style={{ textDecoration: 'none', color: "black" }}>
-                <Pic src="https://t4.ftcdn.net/jpg/05/99/64/79/240_F_599647918_bmfbrXIWjwB7mOiWvH85F9iIwijsDjkd.jpg" />
+                <Link to={`/user/${userId}`} style={{ textDecoration: 'none', color: 'black' }}>
+                <Pic src={user.currentUser?.profilePic} />
                     </Link>
                     
-                    { user.currentUser === null ? (
+                    { user === null ? (
   ""
 ) : (
   <span>WELCOME, {user.currentUser?.username}</span>
@@ -140,7 +145,7 @@ const Navbar = () => {
                     )}
                     <Link to="/shoppingCart">
                         <MenuItem>
-                            <Badge badgeContent={quantity} color="primary">
+                            <Badge key={quantity} badgeContent={quantity} color="primary">
                                 <ShoppingCartIcon color="action" />
                             </Badge>
                         </MenuItem>

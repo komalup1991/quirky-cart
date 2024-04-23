@@ -1,4 +1,4 @@
-import { deleteUserFailure, deleteUserStart, deleteUserSuccess, getUserFailure, getUserStart, getUserSuccess, loginFailure, loginStart, loginSuccess, logoutSuccess } from "../redux/userRedux";
+import { User, deleteUserFailure, deleteUserStart, deleteUserSuccess, getUserFailure, getUserStart, getUserSuccess, loginFailure, loginStart, loginSuccess, logoutSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from "../redux/userRedux";
 import { publicRequest, loggedInUserRequest } from "./AllApi";
 import { Dispatch } from "redux";
 import { Navigate } from "react-router-dom";
@@ -37,28 +37,36 @@ interface Product {
     color: string;
   }
 
-// The login function that uses Redux and Axios for handling the login process
-export const login = async (dispatch: Dispatch, user: UserCredentials) => {
+  export const login = async (dispatch: Dispatch<any>, user: UserCredentials) => {
     dispatch(loginStart());
     try {
-      console.log("dispatch "+ dispatch);
-      console.log("UserCredentials " + user);
-        const res = await publicRequest.post("/auth/login", user);
-        if (res.status === 200) {
-          console.log(res.data.id);
-            dispatch(loginSuccess(res.data));
-        } else {
-            dispatch(loginFailure());
-        }
-    } catch (err) {
+      console.log("user = ", user);
+      const res = await publicRequest.post("/auth/login", user);
+      console.log("LOGGING res = ", res.data);
+      if (res.status === 200) {
+        console.log("LOGGING loginSuccess");
+        dispatch(loginSuccess(res.data));
+        return res.data;  // Return the user data upon successful login
+      } else {
+        console.log("LOGGING loginFailure");
+        // Handle other HTTP status codes as needed
         dispatch(loginFailure());
+        return null;  // Return null to indicate unsuccessful login
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      dispatch(loginFailure());
+      return null;  // Return null to handle exceptions
     }
 };
 
 export const register = async (dispatch:Dispatch, user:UserCredentials, navigate: (path: string) => void) => {
   // dispatch(loginStart());
+  console.log("in register");
+
   try {
       const res = await publicRequest.post("/auth/register", user);
+      console.log("in register res, = ", res.status);
       if (res.status === 200 || res.status === 201) {
           navigate("/login");
       } else {
@@ -124,6 +132,17 @@ export const addProduct = async (product:Product, dispatch:Dispatch) => {
   }
 };
 
+export const updateUser = async (user:User, dispatch:Dispatch) => {
+  dispatch(updateUserStart());
+  try {
+  
+    const res = await loggedInUserRequest.put(`/users/${user.id}`, user);
+   
+    dispatch(updateUserSuccess({ id: user.id, user }));
+  } catch (err) {
+    dispatch(updateUserFailure());
+  }
+}
 export const getUsers = async (dispatch:Dispatch) => {
   dispatch(getUserStart());
   try {

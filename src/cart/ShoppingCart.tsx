@@ -5,13 +5,17 @@ import Notify from '../components/Notify';
 import Footer from '../components/Footer';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
-import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import StripeCheckout from 'react-stripe-checkout';
+import { useDispatch, useSelector } from 'react-redux';
+
 // import { useHistory } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Token } from 'react-stripe-checkout'; 
 import { loggedInUserRequest } from '../auth/AllApi';
+import { updateCart, setTotalQuantity } from '../redux/shoppingCartRedux'
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+const API = `${BASE_API_URL}/api/`;
 
 
 const KEY = process.env.REACT_APP_STRIPE_KEY || '';
@@ -117,12 +121,18 @@ const PriceDetail = styled.div`
 const ProductAmountContainer = styled.div`
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    font-weight: 700;
 `;
 
 const ProductAmount = styled.div`
-    font-size: 24px;
-    margin: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    border: 1px solid teal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 5px;
     @media only screen and (max-width: 380px) {
         margin: "5px 15px"
       }
@@ -177,53 +187,46 @@ const CustomButton = styled.button`
 const ShoppingCart = () => {
     
     const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
-    const [stripeToken, setStripeToken] = useState<Token | null>(null);
-    const navigate = useNavigate();
-    const [message, setMessage] = useState("");
+    const user = useSelector((state: RootState) => state.user.currentUser);
+    const dispatch = useDispatch()
 
+    useEffect(()=>{
+    const getProductsForCart = async () => {
+        try{
+            const res = await loggedInUserRequest.get(
+                `${API}cart/userId=${user?.id}`
+            ); 
+            console.log("getProductsForCart = ", res.data);
+            dispatch(updateCart(res.data));
+            } catch(err){
+            }
+        };
+        getProductsForCart()
+    },[user, shoppingCart.totalQuantity]);
 
-      const onToken = (token: Token) => {
-        setStripeToken(token);
-    };
-    // useEffect(() => {
-    //     if (stripeToken) {
-    //       const makeRequest = async () => {
-    //         try {
-    //           const res = await loggedInUserRequest.post("/checkout/pay", {
-    //             tokenId: stripeToken.id,
-    //             amount: shoppingCart.total * 100,
-    //           });
-    //           navigate('/paymentSuccess', {
-    //             state: {
-    //               stripeData: res.data,
-    //               products: shoppingCart
-    //             }
-    //           });
-              
-    //         } catch (error) {
-    //           console.error("Payment failed:", error);
-             
-    //         }
-    //       };
-    //       stripeToken && makeRequest();
-    //     }
-    //   }, [stripeToken, shoppingCart.total, navigate, shoppingCart]);
-    useEffect(() => {
-        // Check to see if this is a redirect back from Checkout
-        const query = new URLSearchParams(window.location.search);
-    
-        if (query.get("success")) {
-          setMessage("Order placed! You will receive an email confirmation.");
-        }
-    
-        if (query.get("canceled")) {
-          setMessage(
-            "Order canceled -- continue to shop around and checkout when you're ready."
-          );
-        }
-      }, []);
+    const addToCart  = async (productId: number) => {
+        const res = await loggedInUserRequest.post(
+          `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`, { "quantity": 1 }
+        );
+        console.log("addToCart = ", res);
+        dispatch(setTotalQuantity(shoppingCart.totalQuantity + 1))
+    }
+
+    const updateProductQuantityInCart  = async (productId: number, quantity: number) => {
+        const res = await loggedInUserRequest.put(
+          `${API}cart/userId=${user?.id}/productId=${productId}`, { "quantity": quantity }
+        );
+        console.log("updateProductQuantityInCart = ", res);
+        dispatch(setTotalQuantity(shoppingCart.totalQuantity - quantity))
+    }
+
+    // const removeFromCart  = async (productId: number) => {
+    //     const res = await loggedInUserRequest.post(
+    //       `${API}cart//cart/userId=${user?.id}/productId=${productId}`, { "quantity": 1 }
+    //     );
+    //     dispatch(setTotalQuantity(shoppingCart.totalQuantity - 1))
+    // }
       
-console.log(message);
     return   (
         <Container>
             <Navbar />
@@ -241,30 +244,31 @@ console.log(message);
                 <End>
                     <About>
                         
-                            {shoppingCart.products.map((product) => (
+                            {shoppingCart.products.filter((item) => item.product != null).map((item) => (
                         <Product>
                             <ProductDetail>
-                                <Pic src={product.image} alt="" />
+                                <Pic src={item.product.image} alt="" />
                                 <Details>
                                     <ProductName>
-                                        <b>Product:</b> {product.name}
+                                        <b>Product:</b> {JSON.stringify(item.product.name)}
                                     </ProductName>
                                     <ProductId>
-                                        <b>ID:</b> {product.id}
+                                        <b>ID:</b> {item.product.id}
                                     </ProductId>
-                                    <ProductColor color={product.color} />
+                                    <ProductColor color={item.product.color} />
                                     <ProductSize>
-                                        <b>Size:</b>{product.size}
+                                        <b>Size:</b>{item.product.size}
                                     </ProductSize>
                                 </Details>
                             </ProductDetail>
                             <PriceDetail>
                                 <ProductAmountContainer>
-                                    <AddIcon />
-                                    <ProductAmount>{shoppingCart.quantity}</ProductAmount>
-                                    <RemoveIcon />
+                                    <RemoveIcon onClick={()=>{ updateProductQuantityInCart(item.product.id, item.itemQuantity - 1) }}/>
+                                    <ProductAmount>{item.itemQuantity}</ProductAmount>
+                                    <AddIcon onClick={() => { addToCart(item.product.id) }} />
                                 </ProductAmountContainer>
-                                <ProductPrice>$ {product.price* shoppingCart.quantity}</ProductPrice>
+
+                                <ProductPrice>$ {item.product.price * item.itemQuantity}</ProductPrice>
                             </PriceDetail>
                         </Product>
                            )) }
@@ -301,7 +305,7 @@ console.log(message);
                             <CustomSummaryItemPrice>$ {shoppingCart.total}</CustomSummaryItemPrice>
                         </CustomSummaryItem>
                     )}
-                      <StripeCheckout 
+                      {/* <StripeCheckout 
   name="QUIRKY CART"
   image="https://images.unsplash.com/photo-1679331417433-795c3d411ba4?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDE2fF84ekZIdWhSaHlvfHxlbnwwfHx8fHw%3D"
   billingAddress
@@ -310,7 +314,7 @@ console.log(message);
   amount={(shoppingCart.total <= 50 ? (shoppingCart.total + 5.90) : shoppingCart.total) * 100}
   token={onToken}
   stripeKey={KEY}
-/>
+/> */}
    <CustomButton>CHECKOUT NOW</CustomButton>
                 </CustomSummary>
 
@@ -321,4 +325,4 @@ console.log(message);
     );
 };
 
-export default ShoppingCart;
+export default ShoppingCart

@@ -45,10 +45,9 @@ const AllProducts = () => {
   const [sort, setSortOrder] = useState("latest");
   const [filters, setFilters] = useState({});
   const applyFilters = (e: { target: { value: any; name: any } }) => {
-    const value = e.target.value;
+  const value = e.target.value;
     setFilters({ ...filters, [e.target.name]: value });
   };
-  console.log(filters);
   return (
     <Container>
         <Notify />

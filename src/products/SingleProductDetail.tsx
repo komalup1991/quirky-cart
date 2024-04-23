@@ -7,10 +7,13 @@ import Navbar from "../components/Navbar"
 import Notify from "../components/Notify"
 import ProductList from "../components/ProductList"
 import { useLocation } from 'react-router-dom';
-import { publicRequest } from '../auth/AllApi';
-import {ProductInterface} from '../components/ProductList';
+import { loggedInUserRequest, publicRequest } from '../auth/AllApi';
+import { ProductInterface } from '../components/ProductList';
 import { addProduct } from '../redux/shoppingCartRedux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+const API = `${BASE_API_URL}/api/`;
 
 const Container = styled.div``;
 
@@ -153,7 +156,12 @@ const SingleProductDetail: React.FC = () => {
     fetchProducts();
   },[productId]);
 
-  const addToCart = () => {
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const addToCart  = async () => {
+    const res = await loggedInUserRequest.post(
+      `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`, { "quantity": quantity }
+    );
+    console.log("add to", res.data);
     dispatch(
       addProduct({ ...products, quantity })
     );

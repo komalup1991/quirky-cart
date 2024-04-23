@@ -22,6 +22,8 @@ import AddUser  from './admin/addUser';
 import Navbar from './components/Navbar';
 import AdminAllProducts from './admin/allProducts';
 import HandleProducts from './admin/handleProducts';
+import Profile from './user/Profile';
+import UpdateProfile from './user/UpdateProfile';
 
 
 
@@ -55,6 +57,8 @@ const App = () => {
           <Route path="/addProduct" element={<AddProduct />} />   
           </>
         )}
+         <Route path="/user/:userId" element={<Profile />} />
+         <Route path="/user/update/:userId" element={<UpdateProfile />} />
         <Route path="/" element={<Home />} />
         <Route path="/products/:category" element={<AllProducts />} />
         <Route path="/product/:id" element={<SingleProductDetail />} />
