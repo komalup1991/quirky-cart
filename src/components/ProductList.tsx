@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ProductDetail from "./ProductDetail";
 import axios from "axios";
+import { ProductInterface } from "../redux/productRedux";
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 const API = `${BASE_API_URL}/api/`;
 const Container = styled.div`
@@ -16,21 +17,6 @@ interface ProductListProps {
   sort: string;
 }
 
-export interface ProductInterface {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  priceUnit: string;
-  stockQuantity: number;
-  category: string;
-  color: string;
-  size: string;
-  image: string;
-  rating: number;
-  updatedAt: string;
-  createdAt: string;
-}
 const ProductList: React.FC<ProductListProps> = ({
   category,
   filters,

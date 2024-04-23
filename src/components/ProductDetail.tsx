@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Search } from "@mui/icons-material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addToWishlist } from "../auth/ApiCalls";
+import { addToWishlist, removeFromWishlist } from "../auth/ApiCalls";
 import { RootState } from "../redux/store";
-import { ProductInterface } from "./ProductList";
+import { checkWishlistStatus } from "../redux/wishlistRedux";
+import { ProductInterface } from "../redux/productRedux";
 
 const Details = styled.div`
   opacity: 0;
@@ -29,12 +31,12 @@ const Container = styled.div`
   flex: 1;
   margin: 5px;
   min-width: 280px;
-  height: 350px;
+  height: 350px; /* Increased height to accommodate details */
   display: flex;
-  align-items: center;
+  flex-direction: center;
   justify-content: center;
-  background-color: #f5fbfd;
   position: relative;
+  background-color: #f5fbfd;
   &:hover ${Details} {
     opacity: 1;
   }
@@ -69,21 +71,71 @@ const Bubble = styled.div`
   position: absolute;
 `;
 
+const Info = styled.div`
+  text-align: center;
+  padding: 10px 0;
+`;
+
+const Name = styled.h3`
+  margin: 0;
+  color: #333;
+`;
+
+const Price = styled.span`
+  color: green;
+`;
+
 interface ProductProps {
   item: ProductInterface;
 }
 
+const useWishlistItemId = (productId?: number, userId?: number) => {
+  return useSelector((state: RootState) => {
+    const item = state.wishlist.wishlistItems.find(
+      (item) => item.productId === productId && item.userId === userId,
+    );
+    return item?.id;
+  });
+};
+
 const ProductDetail: React.FC<ProductProps> = ({ item }) => {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.user.currentUser?.id);
-  const handleAddToWishlist = async () => {
-    console.log("KOMAL = ", userId, item);
-    addToWishlist(dispatch, userId, Number.parseInt(item.id.toString()));
+  const wishlistItemId = useWishlistItemId(parseInt(item.id), userId);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+
+  useEffect(() => {
+    if (wishlistItemId !== undefined) {
+      setIsInWishlist(true);
+    } else {
+      setIsInWishlist(false);
+    }
+  }, [wishlistItemId]);
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(checkWishlistStatus(parseInt(item.id)));
+    }
+  }, [item.id, userId, dispatch]);
+
+  const handleToggleWishlist = async () => {
+    if (isInWishlist) {
+      await removeFromWishlist(dispatch, wishlistItemId, userId);
+    } else {
+      await addToWishlist(dispatch, userId, parseInt(item.id));
+    }
+    setIsInWishlist(!isInWishlist);
   };
+
   return (
     <Container>
       <Bubble />
       <Pic src={item.image} />
+      <Info>
+        <Name>{item.name}</Name>
+        <div>ID: {item.id}</div>
+        <Price>${item.price}</Price>
+      </Info>
       <Details>
         <IconList>
           <Link to={`/product/${item.id}`}>
@@ -93,8 +145,8 @@ const ProductDetail: React.FC<ProductProps> = ({ item }) => {
         <IconList>
           <ShoppingCartIcon />
         </IconList>
-        <IconList onClick={handleAddToWishlist}>
-          <BookmarkBorderIcon />
+        <IconList onClick={handleToggleWishlist}>
+          {isInWishlist ? <BookmarkIcon /> : <BookmarkBorderIcon />}
         </IconList>
       </Details>
     </Container>

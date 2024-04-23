@@ -54,6 +54,7 @@ const userSlice = createSlice({
       state.accessToken = "";
       state.isFetching = false;
       state.error = false;
+      localStorage.clear();
     },
     getUserStart: (state) => {
       state.isFetching = true;

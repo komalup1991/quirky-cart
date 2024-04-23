@@ -41,6 +41,12 @@ import {
   addWishlistFailure,
   addWishlistStart,
   addWishlistSuccess,
+  getUWishlistStart,
+  getWishlistFailure,
+  getWishlistSuccess,
+  removeWishlistFailure,
+  removeWishlistStart,
+  removeWishlistSuccess,
 } from "../redux/wishlistRedux";
 
 interface UserCredentials {
@@ -200,7 +206,6 @@ export const deleteUser = async (id: string, dispatch: Dispatch) => {
     dispatch(deleteUserFailure());
   }
 };
-
 export const addToWishlist = async (
   dispatch: Dispatch,
   userId?: number,
@@ -220,5 +225,31 @@ export const addToWishlist = async (
     dispatch(addWishlistSuccess(res.data));
   } catch (err) {
     dispatch(addWishlistFailure());
+  }
+};
+export const removeFromWishlist = async (
+  dispatch: Dispatch,
+  wishlistItemId?: number,
+  userId?: number,
+) => {
+  dispatch(removeWishlistStart());
+  try {
+    const res = await loggedInUserRequest.delete(
+      `/users/removeFromWishlist/${wishlistItemId}/${userId}`,
+    );
+    dispatch(removeWishlistSuccess(res.data));
+  } catch (err) {
+    dispatch(removeWishlistFailure());
+  }
+};
+
+export const getWishlist = async (dispatch: Dispatch, userId?: number) => {
+  dispatch(getUWishlistStart());
+  try {
+    const res = await loggedInUserRequest.get(`/users/wishlist/${userId}`);
+    console.log(JSON.stringify(res));
+    dispatch(getWishlistSuccess(res.data));
+  } catch (err) {
+    dispatch(getWishlistFailure());
   }
 };

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
-import styled from 'styled-components'
-import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
-import Notify from "../components/Notify"
-import ProductList from "../components/ProductList"
-import { useLocation } from 'react-router-dom';
-import { loggedInUserRequest, publicRequest } from '../auth/AllApi';
-import { ProductInterface } from '../components/ProductList';
-import { addProduct } from '../redux/shoppingCartRedux';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import React, { useEffect, useState } from "react";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
+import styled from "styled-components";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
+import Notify from "../components/Notify";
+import ProductList from "../components/ProductList";
+import { useLocation } from "react-router-dom";
+import { loggedInUserRequest, publicRequest } from "../auth/AllApi";
+
+import { addProduct } from "../redux/shoppingCartRedux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { ProductInterface } from "../redux/productRedux";
 const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
 const API = `${BASE_API_URL}/api/`;
 
@@ -34,7 +35,7 @@ const Pic = styled.img`
   height: 90vh;
   object-fit: cover;
   @media only screen and (max-width: 380px) {
-    height: "40vh"
+    height: "40vh";
   }
 `;
 
@@ -44,7 +45,7 @@ const ProductInfoBox = styled.div`
   // border: 1px solid lightgray;
   // margin-left: 20px;
   @media only screen and (max-width: 380px) {
-    padding: "10px" 
+    padding: "10px";
   }
 `;
 
@@ -67,9 +68,8 @@ const ActionBox = styled.div`
   display: flex;
   justify-content: space-between;
   @media only screen and (max-width: 380px) {
-    width: "100%"
+    width: "100%";
   }
- 
 `;
 
 const Action = styled.div`
@@ -104,9 +104,8 @@ const AddContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   @media only screen and (max-width: 380px) {
-    width: "100%"
+    width: "100%";
   }
- 
 `;
 
 const AmountContainer = styled.div`
@@ -133,8 +132,8 @@ const Button = styled.button`
   cursor: pointer;
   font-weight: 500;
 
-  &:hover{
-      background-color: #f8f4f4;
+  &:hover {
+    background-color: #f8f4f4;
   }
 `;
 const SingleProductDetail: React.FC = () => {
@@ -144,46 +143,40 @@ const SingleProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   useEffect(() => {
-    const fetchProducts = async ()=>{
-      try{
+    const fetchProducts = async () => {
+      try {
         const res = await publicRequest.get(`/products/find/${productId}`);
         setProducts(res.data);
-        
-      }catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
-    }
+    };
     fetchProducts();
-  },[productId]);
+  }, [productId]);
 
   const user = useSelector((state: RootState) => state.user.currentUser);
-  const addToCart  = async () => {
+  const addToCart = async () => {
     const res = await loggedInUserRequest.post(
-      `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`, { "quantity": quantity }
+      `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`,
+      { quantity: quantity },
     );
     console.log("add to", res.data);
-    dispatch(
-      addProduct({ ...products, quantity })
-    );
-  }
+    dispatch(addProduct({ ...products, quantity }));
+  };
   return (
     <Container>
-        <Navbar />
-        <Notify />
-        
-        <Box>
-            <PicBox>
-                <Pic src={products?.image}/>
-            </PicBox>
-            <ProductInfoBox>
-                <Heading>
-                   {products?.name}
-                </Heading>
-                <Description>
-                    {products?.description}
-                </Description>
-                <Price>$ {products?.price}</Price>
-                <ActionBox>
+      <Navbar />
+      <Notify />
+
+      <Box>
+        <PicBox>
+          <Pic src={products?.image} />
+        </PicBox>
+        <ProductInfoBox>
+          <Heading>{products?.name}</Heading>
+          <Description>{products?.description}</Description>
+          <Price>$ {products?.price}</Price>
+          <ActionBox>
             <Action>
               <ActionLabel>Color</ActionLabel>
               <ActionCategory color={products?.color} />
@@ -197,17 +190,25 @@ const SingleProductDetail: React.FC = () => {
           </ActionBox>
           <AddContainer>
             <AmountContainer>
-              <RemoveIcon onClick={()=>{quantity > 1 && setQuantity(quantity - 1)}}/>
+              <RemoveIcon
+                onClick={() => {
+                  quantity > 1 && setQuantity(quantity - 1);
+                }}
+              />
               <Amount>{quantity}</Amount>
-              <AddIcon onClick={()=>{setQuantity(quantity + 1)}}/>
+              <AddIcon
+                onClick={() => {
+                  setQuantity(quantity + 1);
+                }}
+              />
             </AmountContainer>
             <Button onClick={addToCart}>ADD TO CART</Button>
           </AddContainer>
-            </ProductInfoBox>
-        </Box>
-        <Footer />
+        </ProductInfoBox>
+      </Box>
+      <Footer />
     </Container>
-  )
-}
+  );
+};
 
-export default SingleProductDetail
+export default SingleProductDetail;

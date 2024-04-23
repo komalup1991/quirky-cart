@@ -1,11 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-import {ProductInterface} from '../components/ProductList';
-import { stat } from 'fs';
+import { createSlice } from "@reduxjs/toolkit";
+
+import { stat } from "fs";
+import { ProductInterface } from "./productRedux";
 
 interface CartProduct {
-  itemQuantity: number,
-  itemTotalPrice: number,
-  product: ProductInterface,
+  itemQuantity: number;
+  itemTotalPrice: number;
+  product: ProductInterface;
 }
 
 interface ShoppingCartState {
@@ -21,26 +22,27 @@ const initialState: ShoppingCartState = {
 };
 
 const shoppingCartSlice = createSlice({
-  name: 'shoppingCart',
+  name: "shoppingCart",
   initialState,
   reducers: {
     addProduct: (state, action) => {
-      console.log("gth = ",action)
+      console.log("gth = ", action);
       state.totalQuantity += action.payload.quantity;
       state.products.push(action.payload);
       state.total += action.payload.price * action.payload.quantity;
     },
     updateCart: (state, action) => {
-      state.products = action.payload.productWithPriceTotal
-      state.total = action.payload.total
-      state.totalQuantity = action.payload.totalQuantity
+      state.products = action.payload.productWithPriceTotal;
+      state.total = action.payload.total;
+      state.totalQuantity = action.payload.totalQuantity;
     },
     setTotalQuantity(state, action) {
-      state.totalQuantity = action.payload
-    }
+      state.totalQuantity = action.payload;
+    },
   },
 });
 
-export const { addProduct, updateCart, setTotalQuantity } = shoppingCartSlice.actions;
+export const { addProduct, updateCart, setTotalQuantity } =
+  shoppingCartSlice.actions;
 
 export default shoppingCartSlice.reducer;

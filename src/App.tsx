@@ -24,6 +24,7 @@ import AdminAllProducts from "./admin/allProducts";
 import HandleProducts from "./admin/handleProducts";
 import Profile from "./user/Profile";
 import UpdateProfile from "./user/UpdateProfile";
+import Wishlist from "./user/Wishlist";
 
 const App = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -97,6 +98,10 @@ const App = () => {
         <Route
           path="/product/:id"
           element={<SingleProductDetail />}
+        />
+        <Route
+          path="/wishlist"
+          element={<Wishlist />}
         />
         <Route
           path="/shoppingCart"
