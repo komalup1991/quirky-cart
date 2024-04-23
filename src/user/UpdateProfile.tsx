@@ -77,23 +77,8 @@ const UpdateProfile = () => {
     const [inputs, setInputs] = useState<UserInputs>({});
     const [file, setFile] = useState<File | null>(null);
     const dispatch = useDispatch();
-    // const user = useSelector((state: RootState) => state.user.currentUser);
-    const location = useLocation();
-    const userId = location.pathname.split('/')[3];
-    const [user, setUsers] = useState<User | null>(null);
-    useEffect(() => {
-      const fetchUsers = async ()=>{
-        try{
-          const res = await loggedInUserRequest.get(`/users/${userId}`);
-          setUsers(res.data);
-          
-        }catch(err){
-          console.log(err)
-        }
-      }
-      fetchUsers();
-    },[userId]);
-
+    const user = useSelector((state: RootState) => state.user.currentUser);
+ 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         const val = type === 'number' ? parseInt(value, 10) : value;

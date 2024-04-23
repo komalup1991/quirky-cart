@@ -90,10 +90,12 @@ const userSlice = createSlice({
     },
     updateUserSuccess: (state, action: PayloadAction<{ id: number; user: User }>) => {
       state.isFetching = false;
-      const index = state.users.findIndex(user => user.id === action.payload.id);
-      if (index !== -1) {
-        state.users[index] = action.payload.user;
-      }
+      // const index = state.users.findIndex(user => user.id === action.payload.id);
+      // console.log("index ",index)
+      // if (index !== -1) {
+      //   state.users[index] = action.payload.user;
+      // }
+      state.currentUser = action.payload.user;
       state.error = false;
     },
     updateUserFailure: (state) => {
