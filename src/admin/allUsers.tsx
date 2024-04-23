@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { CleanHands, DeleteOutline } from '@mui/icons-material';
-import { DataGrid } from '@mui/x-data-grid';
-import { getUsers, deleteUser } from '../auth/ApiCalls';
-import { RootState } from '../redux/store';
-import Navbar from '../components/Navbar';
-import AdminNavbar from '../components/adminComponents/AdminNavbar';
-import AdminSidebar from '../components/adminComponents/AdminSidebar';
-import { GridRenderCellParams } from '@mui/x-data-grid';
-
-
-
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { CleanHands, DeleteOutline } from "@mui/icons-material";
+import { DataGrid } from "@mui/x-data-grid";
+import { getUsers, deleteUser } from "../auth/ApiCalls";
+import { RootState } from "../redux/store";
+import Navbar from "../components/Navbar";
+import AdminNavbar from "../components/adminComponents/AdminNavbar";
+import AdminSidebar from "../components/adminComponents/AdminSidebar";
+import { GridRenderCellParams } from "@mui/x-data-grid";
 
 // Styled components
 const UserList = styled.div`
@@ -40,17 +37,17 @@ const UserListDeleteIcon = styled(DeleteOutline)`
   color: red;
 `;
 const Left = styled.div`
-    flex: 1;
-    `;
+  flex: 1;
+`;
 const Right = styled.div`
-    flex: 4;
-    `;
-    const Box = styled.div`
-    display: flex;`;
+  flex: 4;
+`;
+const Box = styled.div`
+  display: flex;
+`;
 export default function AllUsers() {
   const dispatch = useDispatch();
   const users = useSelector((state: RootState) => state.user.users);
-  
 
   useEffect(() => {
     getUsers(dispatch);
@@ -60,76 +57,74 @@ export default function AllUsers() {
     deleteUser(id, dispatch);
   };
 
-
-    const columns = [
-        { field: "id", headerName: "ID", width: 90 },
-        {
-          field: "user",
-          headerName: "User",
-          width: 200,
-          renderCell: (params:any) => (
-              <UserListItem>
-                <UserListImg  src={params.row.avatar} alt="" />
-                {params.row.username}
-              </UserListItem>
-            ),
-        },
-        { field: "email", headerName: "Email", width: 200 },
-        {
-          field: "firstName",
-          headerName: "First Name",
-          width: 120,
-        },
-        {
-          field: "lastName",
-          headerName: "Last Name",
-          width: 160,
-        },
-        {
-            field: "role",
-            headerName: "Role",
-            width: 160,
-          },
-        {
-          field: "action",
-          headerName: "Action",
-          width: 150,
-          renderCell: (params:any) =>  (
-              <>
-                <Link to={`/user/${params.row.id}`}>
-                    <UserListEditButton>Edit</UserListEditButton>
-                </Link>
-                <UserListDeleteIcon onClick={() => handleDelete(params.row.id)} />
-              </>
-          ),
-        },
-      ];
+  const columns = [
+    { field: "id", headerName: "ID", width: 90 },
+    {
+      field: "user",
+      headerName: "User",
+      width: 200,
+      renderCell: (params: any) => (
+        <UserListItem>
+          <UserListImg
+            src={params.row.profilePic}
+            alt=""
+          />
+          {params.row.username}
+        </UserListItem>
+      ),
+    },
+    { field: "email", headerName: "Email", width: 200 },
+    {
+      field: "firstName",
+      headerName: "First Name",
+      width: 120,
+    },
+    {
+      field: "lastName",
+      headerName: "Last Name",
+      width: 160,
+    },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 160,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 150,
+      renderCell: (params: any) => (
+        <>
+          <Link to={`/user/updateUserProfile/${params.row.id}`}>
+            <UserListEditButton>Edit</UserListEditButton>
+          </Link>
+          <UserListDeleteIcon onClick={() => handleDelete(params.row.id)} />
+        </>
+      ),
+    },
+  ];
 
   return (
     <div>
-
-   
-    <Navbar/>
-    <AdminNavbar/>
-    <Box>
+      <Navbar />
+      <AdminNavbar />
+      <Box>
         <Left>
-        <AdminSidebar/>
+          <AdminSidebar />
         </Left>
         <Right>
-        <UserList>
-      <DataGrid
-        rows={users}
-        disableRowSelectionOnClick
-        columns={columns}
-        getRowId={(row) => row.id}
-        // pageSize={8}
-        checkboxSelection
-      />
-    </UserList>
+          <UserList>
+            <DataGrid
+              rows={users}
+              disableRowSelectionOnClick
+              columns={columns}
+              getRowId={(row) => row.id}
+              // pageSize={8}
+              checkboxSelection
+            />
+          </UserList>
         </Right>
-
-    </Box>
-    
+      </Box>
     </div>
   );
 }

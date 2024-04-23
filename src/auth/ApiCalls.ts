@@ -1,8 +1,27 @@
-import { User, deleteUserFailure, deleteUserStart, deleteUserSuccess, getUserFailure, getUserStart, getUserSuccess, loginFailure, loginStart, loginSuccess, logoutSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from "../redux/userRedux";
+import {
+  User,
+  addUserFailure,
+  addUserStart,
+  addUserSuccess,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  getUserFailure,
+  getUserStart,
+  getUserSuccess,
+  loginFailure,
+  loginStart,
+  loginSuccess,
+  logoutSuccess,
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+  updateOtherUserSuccess,
+} from "../redux/userRedux";
 import { publicRequest, loggedInUserRequest } from "./AllApi";
 import { Dispatch } from "redux";
 import { Navigate } from "react-router-dom";
-import { persistor } from "../redux/store"; 
+import { persistor } from "../redux/store";
 import {
   getProductFailure,
   getProductStart,
@@ -18,81 +37,76 @@ import {
   addProductSuccess,
 } from "../redux/productRedux";
 
-
-
 interface UserCredentials {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 interface Product {
-    id: string;
-    name: string;
-    description: string;
-    image: string;
-    price: number;
-    stockQuantity: number;
-    category: string;
-    rating: number;
-    size: string;
-    color: string;
-  }
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  stockQuantity: number;
+  category: string;
+  rating: number;
+  size: string;
+  color: string;
+}
 
-  export const login = async (dispatch: Dispatch<any>, user: UserCredentials) => {
-    dispatch(loginStart());
-    try {
-      console.log("user = ", user);
-      const res = await publicRequest.post("/auth/login", user);
-      console.log("LOGGING res = ", res.data);
-      if (res.status === 200) {
-        console.log("LOGGING loginSuccess");
-        dispatch(loginSuccess(res.data));
-        return res.data;  // Return the user data upon successful login
-      } else {
-        console.log("LOGGING loginFailure");
-        // Handle other HTTP status codes as needed
-        dispatch(loginFailure());
-        return null;  // Return null to indicate unsuccessful login
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      dispatch(loginFailure());
-      return null;  // Return null to handle exceptions
-    }
-};
-
-export const register = async (dispatch:Dispatch, user:UserCredentials, navigate: (path: string) => void) => {
-  // dispatch(loginStart());
-  console.log("in register");
-
+export const login = async (dispatch: Dispatch<any>, user: UserCredentials) => {
+  dispatch(loginStart());
   try {
-      const res = await publicRequest.post("/auth/register", user);
-      console.log("in register res, = ", res.status);
-      if (res.status === 200 || res.status === 201) {
-          navigate("/login");
-      } else {
-          dispatch(loginFailure());
-      }
-  } catch (err) {
-      console.error("Registration error:", err); // More detailed error logging
+    const res = await publicRequest.post("/auth/login", user);
+
+    if (res.status === 200) {
+      dispatch(loginSuccess(res.data));
+      return res.data; // Return the user data upon successful login
+    } else {
+      // Handle other HTTP status codes as needed
       dispatch(loginFailure());
+      return null; // Return null to indicate unsuccessful login
+    }
+  } catch (error) {
+    dispatch(loginFailure());
+    return null; // Return null to handle exceptions
   }
 };
 
+export const register = async (
+  dispatch: Dispatch,
+  user: UserCredentials,
+  navigate: (path: string) => void,
+) => {
+  dispatch(addUserStart());
+  try {
+    const res = await publicRequest.post("/auth/register", user);
+    if (res.status === 200 || res.status === 201) {
+      dispatch(addUserSuccess(res.data));
+      navigate("/login");
+    } else {
+      dispatch(addUserFailure());
+    }
+  } catch (err) {
+    console.error("Registration error:", err); // More detailed error logging
+    dispatch(addUserFailure());
+  }
+};
 
-export const logout = (dispatch: Dispatch, navigate: (path: string) => void) => {
+export const logout = (
+  dispatch: Dispatch,
+  navigate: (path: string) => void,
+) => {
   localStorage.clear();
   dispatch(logoutSuccess());
 
   persistor.purge().then(() => {
     console.log("Purged persistor storage");
-    navigate('/'); 
+    navigate("/");
   });
 };
 
-
-
-
-export const getProducts = async (dispatch:Dispatch) => {
+export const getProducts = async (dispatch: Dispatch) => {
   dispatch(getProductStart());
   try {
     const res = await publicRequest.get("/products");
@@ -102,7 +116,7 @@ export const getProducts = async (dispatch:Dispatch) => {
   }
 };
 
-export const deleteProduct = async (id:string, dispatch:Dispatch) => {
+export const deleteProduct = async (id: string, dispatch: Dispatch) => {
   dispatch(deleteProductStart());
   try {
     const res = await loggedInUserRequest.delete(`/products/${id}`);
@@ -112,7 +126,11 @@ export const deleteProduct = async (id:string, dispatch:Dispatch) => {
   }
 };
 
-export const updateProduct = async (id:string, product:Product, dispatch:Dispatch) => {
+export const updateProduct = async (
+  id: string,
+  product: Product,
+  dispatch: Dispatch,
+) => {
   dispatch(updateProductStart());
   try {
     const res = await loggedInUserRequest.put(`/products/${id}`);
@@ -121,10 +139,9 @@ export const updateProduct = async (id:string, product:Product, dispatch:Dispatc
     dispatch(updateProductFailure());
   }
 };
-export const addProduct = async (product:Product, dispatch:Dispatch) => {
+export const addProduct = async (product: Product, dispatch: Dispatch) => {
   dispatch(addProductStart());
   try {
-    
     const res = await loggedInUserRequest.post(`products/addProduct`, product);
     dispatch(addProductSuccess(res.data));
   } catch (err) {
@@ -132,29 +149,43 @@ export const addProduct = async (product:Product, dispatch:Dispatch) => {
   }
 };
 
-export const updateUser = async (user:User, dispatch:Dispatch) => {
+export const updateUser = async (user: User, dispatch: Dispatch) => {
   dispatch(updateUserStart());
   try {
-  
     const res = await loggedInUserRequest.put(`/users/${user.id}`, user);
-   
+
     dispatch(updateUserSuccess({ id: user.id, user }));
   } catch (err) {
     dispatch(updateUserFailure());
   }
-}
-export const getUsers = async (dispatch:Dispatch) => {
+};
+
+export const updateOtherUser = async (user: User, dispatch: Dispatch) => {
+  dispatch(updateUserStart());
+  try {
+    const res = await loggedInUserRequest.put(
+      `/users/otherUser/${user.id}`,
+      user,
+    );
+
+    dispatch(updateOtherUserSuccess({ id: user.id, user }));
+  } catch (err) {
+    dispatch(updateUserFailure());
+  }
+};
+
+export const getUsers = async (dispatch: Dispatch) => {
   dispatch(getUserStart());
   try {
     const res = await loggedInUserRequest.get("/users/all");
-    console.log("hey",JSON.stringify(res.data));
+
     dispatch(getUserSuccess(res.data));
   } catch (err) {
     dispatch(getUserFailure());
   }
 };
 
-export const deleteUser = async (id:string, dispatch:Dispatch) => {
+export const deleteUser = async (id: string, dispatch: Dispatch) => {
   dispatch(deleteUserStart());
   try {
     const res = await loggedInUserRequest.delete(`/users/${id}`);

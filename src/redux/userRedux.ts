@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface User {
   id: number;
@@ -27,12 +27,12 @@ const initialState: UserState = {
   currentUser: null,
   isFetching: false,
   error: false,
-  accessToken: '',
+  accessToken: "",
   users: [],
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     loginStart: (state) => {
@@ -51,7 +51,7 @@ const userSlice = createSlice({
     },
     logoutSuccess: (state) => {
       state.currentUser = null;
-      state.accessToken = '';
+      state.accessToken = "";
       state.isFetching = false;
       state.error = false;
     },
@@ -74,7 +74,9 @@ const userSlice = createSlice({
     },
     deleteUserSuccess: (state, action: PayloadAction<string>) => {
       state.isFetching = false;
-      const index = state.users.findIndex(user => user.id.toString() === action.payload);
+      const index = state.users.findIndex(
+        (user) => user.id.toString() === action.payload,
+      );
       if (index !== -1) {
         state.users.splice(index, 1);
       }
@@ -88,14 +90,27 @@ const userSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    updateUserSuccess: (state, action: PayloadAction<{ id: number; user: User }>) => {
+    updateUserSuccess: (
+      state,
+      action: PayloadAction<{ id: number; user: User }>,
+    ) => {
       state.isFetching = false;
-      // const index = state.users.findIndex(user => user.id === action.payload.id);
-      // console.log("index ",index)
-      // if (index !== -1) {
-      //   state.users[index] = action.payload.user;
-      // }
       state.currentUser = action.payload.user;
+      state.error = false;
+    },
+    updateOtherUserSuccess: (
+      state,
+      action: PayloadAction<{ id: number; user: User }>,
+    ) => {
+      state.isFetching = false;
+      const index = state.users.findIndex(
+        (user) => user.id === action.payload.id,
+      );
+      console.log("index ", index);
+      if (index !== -1) {
+        state.users[index] = action.payload.user;
+      }
+      //  state.currentUser = action.payload.user;
       state.error = false;
     },
     updateUserFailure: (state) => {
@@ -120,7 +135,7 @@ const userSlice = createSlice({
     },
     tokenExpired: (state) => {
       state.currentUser = null;
-      state.accessToken = '';
+      state.accessToken = "";
       state.error = false;
     },
     authenticationInProgress: (state) => {
@@ -129,7 +144,7 @@ const userSlice = createSlice({
     },
     authenticationExpired: (state) => {
       state.currentUser = null;
-      state.accessToken = '';
+      state.accessToken = "";
       state.isFetching = false;
       state.error = false;
     },
@@ -162,5 +177,6 @@ export const {
   authenticationInProgress,
   authenticationExpired,
   rememberMeLogin,
+  updateOtherUserSuccess,
 } = userSlice.actions;
 export default userSlice.reducer;

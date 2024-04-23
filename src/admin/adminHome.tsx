@@ -1,104 +1,107 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { loggedInUserRequest } from '../auth/AllApi';
-import Chart from '../components/adminComponents/Visuals';
-import Navbar from '../components/Navbar';
-import AdminNavbar from '../components/adminComponents/AdminNavbar';
-import styled from 'styled-components';
-import AdminSidebar from '../components/adminComponents/AdminSidebar';
-
+import React, { useEffect, useMemo, useState } from "react";
+import { loggedInUserRequest } from "../auth/AllApi";
+import Chart from "../components/adminComponents/Visuals";
+import Navbar from "../components/Navbar";
+import AdminNavbar from "../components/adminComponents/AdminNavbar";
+import styled from "styled-components";
+import AdminSidebar from "../components/adminComponents/AdminSidebar";
 
 type UserStat = {
   name: string;
   "Active User": number;
 };
-const Container = styled.div`{
-  display: flex;
-  margin-top: 10px;
-}`;
-const Home= styled.div`{
-flex: 4;
-}`;
-
-const HomeWidgets= styled.div`{
-  display: flex;
-  margin: 20px;
-}`;
-const Left = styled.div`
-    flex: 1;
-    `;
-const Right = styled.div`
+const Container = styled.div`
+   {
+    display: flex;
+    margin-top: 10px;
+  }
+`;
+const Home = styled.div`
+   {
     flex: 4;
-    `;
-const Box = styled.div`
-    display: flex;`;
+  }
+`;
 
+const HomeWidgets = styled.div`
+   {
+    display: flex;
+    margin: 20px;
+  }
+`;
+const Left = styled.div`
+  flex: 1;
+`;
+const Right = styled.div`
+  flex: 4;
+`;
+const Box = styled.div`
+  display: flex;
+`;
 
 const AdminHome: React.FC = () => {
-    const [userStats, setUserStats] = useState<UserStat[]>([]);
-    console.log(userStats);
+  const [userStats, setUserStats] = useState<UserStat[]>([]);
+  console.log(userStats);
 
-    const MONTHS = useMemo(
-      () => [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug", 
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-      []
-    );
+  const MONTHS = useMemo(
+    () => [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    [],
+  );
 
-    useEffect(() => {
-        const getStats = async () => {
-          try {
-            
-            const res = await loggedInUserRequest.get("/users/stats");
-            res.data.map((item: any) =>
-              setUserStats((prev) => [
-                ...prev,
-                { name: MONTHS[item._id - 1], "Active User": item.total },
-              ])
-            );
-          } catch(err) {
-            console.error(err); 
-          }
-        };
-        getStats();
-    }, [MONTHS]);
+  useEffect(() => {
+    const getStats = async () => {
+      try {
+        const res = await loggedInUserRequest.get("/users/stats");
+        res.data.map((item: any) =>
+          setUserStats((prev) => [
+            ...prev,
+            { name: MONTHS[item._id - 1], "Active User": item.total },
+          ]),
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getStats();
+  }, [MONTHS]);
 
-    return (
-      <Container>
-        <Navbar/>
-  <AdminNavbar/>
-  <Box>
+  return (
+    <Container>
+      <Navbar />
+
+      <Box>
         <Left>
-        <AdminSidebar/>
+          <AdminSidebar />
         </Left>
         <Right>
-<Home>
-<Chart
-        data={userStats}
-        title="User Analytics"
-        grid
-        dataKey="Active User"
-    />
-<HomeWidgets>
-   {/* <WidgetSm />
+          <Home>
+            <Chart
+              data={userStats}
+              title="User Analytics"
+              grid
+              dataKey="Active User"
+            />
+            <HomeWidgets>
+              {/* <WidgetSm />
         <WidgetLg /> */}
-</HomeWidgets>
-</Home>
-</Right>
-
-</Box>
-        </Container>
-    );
+            </HomeWidgets>
+          </Home>
+        </Right>
+      </Box>
+    </Container>
+  );
 };
 
-export default AdminHome; 
+export default AdminHome;

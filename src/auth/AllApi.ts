@@ -7,7 +7,7 @@ const API = `${BASE_API_URL}/api/`;
 
 let JWT_TOKEN = '';
 try {
-  // localStorage.clear();
+  //localStorage.clear();
   const rootPersist = localStorage.getItem("persist:root");
 
   if (rootPersist) {
