@@ -1,11 +1,13 @@
-import React from 'react'
-import styled from 'styled-components';
-import { Search} from '@mui/icons-material';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Link } from 'react-router-dom';
-
-
+import React from "react";
+import styled from "styled-components";
+import { Search } from "@mui/icons-material";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToWishlist } from "../auth/ApiCalls";
+import { RootState } from "../redux/store";
+import { ProductInterface } from "./ProductList";
 
 const Details = styled.div`
   opacity: 0;
@@ -23,7 +25,6 @@ const Details = styled.div`
   cursor: pointer;
 `;
 
-
 const Container = styled.div`
   flex: 1;
   margin: 5px;
@@ -34,7 +35,7 @@ const Container = styled.div`
   justify-content: center;
   background-color: #f5fbfd;
   position: relative;
-  &:hover ${Details}{
+  &:hover ${Details} {
     opacity: 1;
   }
 `;
@@ -57,7 +58,8 @@ const IconList = styled.div`
   &:hover {
     background-color: #e9f5f5;
     transform: scale(1.1);
-}`;
+  }
+`;
 
 const Bubble = styled.div`
   width: 200px;
@@ -65,33 +67,38 @@ const Bubble = styled.div`
   border-radius: 50%;
   background-color: white;
   position: absolute;
-    `;
+`;
 
 interface ProductProps {
-      item: any; 
-  }
-
-const ProductDetail:React.FC<ProductProps> = ({item}) => {
-  return (
-    <Container>
-      <Bubble/>
-      <Pic src={item.image}/>
-      <Details>
-        <IconList>
-          <Link  to={`/product/${item.id}`}>
-          <Search/>
-          </Link>
-       
-        </IconList>
-        <IconList>
-        <ShoppingCartIcon/>
-        </IconList>
-        <IconList>
-        <BookmarkBorderIcon/>
-        </IconList>
-      </Details>   
-    </Container>
-  )
+  item: ProductInterface;
 }
 
-export default ProductDetail
+const ProductDetail: React.FC<ProductProps> = ({ item }) => {
+  const dispatch = useDispatch();
+  const userId = useSelector((state: RootState) => state.user.currentUser?.id);
+  const handleAddToWishlist = async () => {
+    console.log("KOMAL = ", userId, item);
+    addToWishlist(dispatch, userId, Number.parseInt(item.id.toString()));
+  };
+  return (
+    <Container>
+      <Bubble />
+      <Pic src={item.image} />
+      <Details>
+        <IconList>
+          <Link to={`/product/${item.id}`}>
+            <Search />
+          </Link>
+        </IconList>
+        <IconList>
+          <ShoppingCartIcon />
+        </IconList>
+        <IconList onClick={handleAddToWishlist}>
+          <BookmarkBorderIcon />
+        </IconList>
+      </Details>
+    </Container>
+  );
+};
+
+export default ProductDetail;

@@ -81,20 +81,18 @@ const ProductList: React.FC<ProductListProps> = ({
   return (
     <Container>
       {category
-        ? filterProducts.map((item: { id: React.Key | null | undefined }) => (
+        ? filterProducts.map((item: ProductInterface) => (
             <ProductDetail
               item={item}
               key={item.id}
             />
           ))
-        : products
-            .slice(0, 8)
-            .map((item: { id: React.Key | null | undefined }) => (
-              <ProductDetail
-                item={item}
-                key={item.id}
-              />
-            ))}
+        : products.slice(0, 8).map((item: ProductInterface) => (
+            <ProductDetail
+              item={item}
+              key={item.id}
+            />
+          ))}
     </Container>
   );
 };

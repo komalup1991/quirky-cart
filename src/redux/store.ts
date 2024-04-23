@@ -1,8 +1,8 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import shoppingCartReducer from './shoppingCartRedux';
-import productReducer from './productRedux';
-import userReducer from './userRedux';
-import storage from 'redux-persist/lib/storage';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import shoppingCartReducer from "./shoppingCartRedux";
+import productReducer from "./productRedux";
+import userReducer from "./userRedux";
+import storage from "redux-persist/lib/storage";
 import {
   persistStore,
   persistReducer,
@@ -12,16 +12,18 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist';
+} from "redux-persist";
+import wishlistReducer from "./wishlistRedux";
 
 const rootReducer = combineReducers({
   shoppingCart: shoppingCartReducer,
   user: userReducer,
   product: productReducer,
+  wishlist: wishlistReducer,
 });
 
 const persistConfig = {
-  key: 'root',
+  key: "root",
   version: 1,
   storage,
 };

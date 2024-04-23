@@ -35,7 +35,13 @@ import {
   addProductFailure,
   addProductStart,
   addProductSuccess,
+  ProductInterface,
 } from "../redux/productRedux";
+import {
+  addWishlistFailure,
+  addWishlistStart,
+  addWishlistSuccess,
+} from "../redux/wishlistRedux";
 
 interface UserCredentials {
   username: string;
@@ -192,5 +198,27 @@ export const deleteUser = async (id: string, dispatch: Dispatch) => {
     dispatch(deleteUserSuccess(id));
   } catch (err) {
     dispatch(deleteUserFailure());
+  }
+};
+
+export const addToWishlist = async (
+  dispatch: Dispatch,
+  userId?: number,
+  productId?: number,
+) => {
+  dispatch(addWishlistStart());
+  try {
+    const requestBody = {
+      userId: userId,
+      productId: productId,
+    };
+
+    const res = await loggedInUserRequest.post(
+      "/users/addToWishlist",
+      requestBody,
+    );
+    dispatch(addWishlistSuccess(res.data));
+  } catch (err) {
+    dispatch(addWishlistFailure());
   }
 };
