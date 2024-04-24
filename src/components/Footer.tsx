@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -7,6 +7,8 @@ import BusinessIcon from "@mui/icons-material/Business";
 import PhonelinkRingIcon from "@mui/icons-material/PhonelinkRing";
 import AlternateEmailIcon from "@mui/icons-material/AlternateEmail";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Container = styled.div`
   display: flex;
@@ -82,6 +84,7 @@ const Pay = styled.img`
 `;
 
 const Footer = () => {
+  const userId = useSelector((state: RootState) => state.user.currentUser?.id);
   return (
     <Container>
       <LeftPart>
@@ -111,14 +114,27 @@ const Footer = () => {
       <MiddlePart>
         <Heading>Useful Links</Heading>
         <List>
-          <ListItem>Home</ListItem>
-          <ListItem>Cart</ListItem>
-          <ListItem>Mugs</ListItem>
-          <ListItem>Bags</ListItem>
-          <ListItem>Key rings</ListItem>
-          <ListItem>My Account</ListItem>
-          <ListItem>Order Tracking</ListItem>
-
+          <ListItem>
+            <Link to="/">Home</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="/shoppingCart">Cart</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="/products/mug">Mugs</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="/products/bag">Bags</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="/products/keyring">Key rings</Link>
+          </ListItem>
+          <ListItem>
+            <Link to={`/user/${userId}`}>My Account</Link>
+          </ListItem>
+          <ListItem>
+            <Link to="">Order Tracking</Link>
+          </ListItem>
           <ListItem>
             <Link to="/wishlist">Wishlist</Link>
           </ListItem>

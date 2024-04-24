@@ -10,7 +10,10 @@ import { addToWishlist, removeFromWishlist } from "../auth/ApiCalls";
 import { RootState } from "../redux/store";
 import { checkWishlistStatus } from "../redux/wishlistRedux";
 import { ProductInterface } from "../redux/productRedux";
-
+import { loggedInUserRequest, publicRequest } from "../auth/AllApi";
+import { addProduct } from "../redux/shoppingCartRedux";
+const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+const API = `${BASE_API_URL}/api/`;
 const Details = styled.div`
   opacity: 0;
   width: 100%;
@@ -126,7 +129,28 @@ const ProductDetail: React.FC<ProductProps> = ({ item }) => {
     }
     setIsInWishlist(!isInWishlist);
   };
-
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await publicRequest.get(`/products/find/${item.id}`);
+        setProducts(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchProducts();
+  }, [item.id]);
+  const user = useSelector((state: RootState) => state.user.currentUser);
+  const [products, setProducts] = useState<ProductInterface | null>(null);
+  const quantity = 1;
+  const addToCart = async () => {
+    const res = await loggedInUserRequest.post(
+      `${API}cart/c/addToCart/userId=${user?.id}/productId=${item.id}`,
+      { quantity: 1 },
+    );
+    console.log("add to", res.data);
+    dispatch(addProduct({ ...products, quantity }));
+  };
   return (
     <Container>
       <Bubble />
@@ -143,7 +167,7 @@ const ProductDetail: React.FC<ProductProps> = ({ item }) => {
           </Link>
         </IconList>
         <IconList>
-          <ShoppingCartIcon />
+          <ShoppingCartIcon onClick={addToCart} />
         </IconList>
         <IconList onClick={handleToggleWishlist}>
           {isInWishlist ? <BookmarkIcon /> : <BookmarkBorderIcon />}
