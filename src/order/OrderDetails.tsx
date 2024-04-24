@@ -75,36 +75,39 @@ const About = styled.div`
 
 const Product = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
+  border-bottom: 0.1px solid grey;
+  padding-top: 10px;
+  padding-bottom: 10px;
   @media only screen and (max-width: 380px) {
     flexdirection: "column";
   }
 `;
 
 const ProductDetail = styled.div`
-  flex: 2;
+  flex: 1;
   display: flex;
 `;
 
 const Pic = styled.img`
-  width: 200px;
+  width: 100px;
 `;
 
 const Details = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
 `;
 
 const ProductName = styled.span``;
-
-const ProductId = styled.span``;
 
 const ProductColor = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
+  margin-top: 10px;
+  margin-bottom: 10px;
   background-color: ${(props) => props.color};
 `;
 
@@ -118,17 +121,8 @@ const PriceDetail = styled.div`
   justify-content: center;
 `;
 
-const ProductAmountContainer = styled.div`
-  display: flex;
-  align-items: center;
-  font-weight: 700;
-`;
-
 const ProductAmount = styled.div`
-  width: 30px;
   height: 30px;
-  border-radius: 10px;
-  border: 1px solid teal;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,7 +133,7 @@ const ProductAmount = styled.div`
 `;
 
 const ProductPrice = styled.div`
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 200;
   @media only screen and (max-width: 380px) {
     marginbottom: "20px";
@@ -172,6 +166,15 @@ const CustomSummaryItem = styled.div<{ type?: string }>`
   font-size: ${(props) => props.type === "total" && "24px"};
 `;
 
+const PaymentTitle = styled.div`
+  margin-bottom: 10px;
+`;
+
+const CardAdditionInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const CustomSummaryItemText = styled.span``;
 
 const CustomSummaryItemPrice = styled.span``;
@@ -183,8 +186,21 @@ const CustomButton = styled.button`
   color: white;
   font-weight: 600;
 `;
-
-const ShoppingCart = () => {
+const AddProductDetailLabel = styled.label`
+  color: gray;
+  font-weight: 600;
+  margin-bottom: 10px;
+`;
+const CardDetail = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+`;
+const AddProductDetailInput = styled.input`
+  padding: 10px;
+`;
+const OrderDetails = () => {
   const shoppingCart = useSelector((state: RootState) => state.shoppingCart);
   const user = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
@@ -235,15 +251,7 @@ const ShoppingCart = () => {
       <Navbar />
       <Notify />
       <Box>
-        <Heading>YOUR BAG</Heading>
-        <Start>
-          <StartButton>CONTINUE SHOPPING</StartButton>
-          <Link
-            to="/wishlist"
-            style={{ textDecoration: "none" }}>
-            <StartButton>WISHLIST</StartButton>
-          </Link>
-        </Start>
+        <Heading>ORDER DETAILS</Heading>
         <End>
           <About>
             {shoppingCart.products
@@ -259,9 +267,6 @@ const ShoppingCart = () => {
                       <ProductName>
                         <b>Product:</b> {item.product.name}
                       </ProductName>
-                      <ProductId>
-                        <b>ID:</b> {item.product.id}
-                      </ProductId>
                       <ProductColor color={item.product.color} />
                       <ProductSize>
                         <b>Size:</b>
@@ -270,23 +275,7 @@ const ShoppingCart = () => {
                     </Details>
                   </ProductDetail>
                   <PriceDetail>
-                    <ProductAmountContainer>
-                      <RemoveIcon
-                        onClick={() => {
-                          updateProductQuantityInCart(
-                            parseInt(item.product.id),
-                            item.itemQuantity - 1,
-                          );
-                        }}
-                      />
-                      <ProductAmount>{item.itemQuantity}</ProductAmount>
-                      <AddIcon
-                        onClick={() => {
-                          addToCart(parseInt(item.product.id));
-                        }}
-                      />
-                    </ProductAmountContainer>
-
+                    <ProductAmount>QTY: {item.itemQuantity}</ProductAmount>
                     <ProductPrice>
                       $ {item.product.price * item.itemQuantity}
                     </ProductPrice>
@@ -329,15 +318,47 @@ const ShoppingCart = () => {
             )}
             {shoppingCart.total > 50 && (
               <CustomSummaryItem type="total">
-                <CustomSummaryItemText>Total</CustomSummaryItemText>
+                <CustomSummaryItemText>
+                  Total ({shoppingCart.totalQuantity} items)
+                </CustomSummaryItemText>
                 <CustomSummaryItemPrice>
                   $ {shoppingCart.total}
                 </CustomSummaryItemPrice>
               </CustomSummaryItem>
             )}
-            <Link to="/orderDetails">
-              <CustomButton>CHECKOUT NOW</CustomButton>
-            </Link>
+            <PaymentTitle>Payment Details</PaymentTitle>
+            <CardDetail>
+              <AddProductDetailInput
+                name="cardNumber"
+                type="text"
+                placeholder="Card Number"
+                maxLength={16}
+                // onChange={handleChange}
+              />
+            </CardDetail>
+            <CardAdditionInfo>
+              <CardDetail>
+                <AddProductDetailInput
+                  name="cvv"
+                  type="text"
+                  placeholder="CVV"
+                  maxLength={3}
+                  // onChange={handleChange}
+                />
+              </CardDetail>
+              <div style={{ width: "20px" }} />
+              <CardDetail>
+                <AddProductDetailInput
+                  name="date"
+                  type="text"
+                  placeholder="MM / YY"
+                  maxLength={5}
+                  // onChange={handleChange}
+                />
+              </CardDetail>
+            </CardAdditionInfo>
+
+            <CustomButton>ORDER NOW</CustomButton>
           </CustomSummary>
         </End>
       </Box>
@@ -346,4 +367,4 @@ const ShoppingCart = () => {
   );
 };
 
-export default ShoppingCart;
+export default OrderDetails;

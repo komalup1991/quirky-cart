@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { login } from './ApiCalls';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { loginStart, loginSuccess, loginFailure } from '../redux/userRedux';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { login } from "./ApiCalls";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { loginStart, loginSuccess, loginFailure } from "../redux/userRedux";
+import { Link, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
   background: linear-gradient(
-    rgba(255, 255, 255, 0.5),
-    rgba(255, 255, 255, 0.5)
-  ),
-  url("https://images.unsplash.com/photo-1560015534-cee980ba7e13?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTE3fHxjb2xvcmZ1bCUyMHRyaW5rZXRzJTIwc2hvcHBpbmd8ZW58MHx8MHx8fDA%3D")
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.5)
+    ),
+    url("https://images.unsplash.com/photo-1560015534-cee980ba7e13?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTE3fHxjb2xvcmZ1bCUyMHRyaW5rZXRzJTIwc2hvcHBpbmd8ZW58MHx8MHx8fDA%3D")
       center;
   background-size: cover;
   display: flex;
@@ -26,7 +26,7 @@ const Box = styled.div`
   padding: 20px;
   background-color: white;
   @media only screen and (max-width: 380px) {
-    width: "75%"
+    width: "75%";
   }
 `;
 
@@ -40,7 +40,7 @@ const Form = styled.form`
   flex-direction: column;
 `;
 
-const Link = styled.a`
+const LinkStyle = styled.a`
   margin: 5px 0px;
   font-size: 12px;
   text-decoration: underline;
@@ -75,8 +75,8 @@ const Error = styled.span`
 `;
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isFetching, error } = useSelector((state: RootState) => state.user);
@@ -90,7 +90,7 @@ const Login = () => {
       const response = await login(dispatch, userCredentials);
       if (response) {
         dispatch(loginSuccess(response)); // Assuming response contains user data
-        navigate('/'); // Redirect to dashboard upon successful login
+        navigate("/"); // Redirect to dashboard upon successful login
       } else {
         dispatch(loginFailure());
       }
@@ -117,13 +117,19 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <Button onClick={handleSubmit} disabled={isFetching}>
-            {isFetching ? 'Logging in...' : 'LOGIN'}
+          <Button
+            onClick={handleSubmit}
+            disabled={isFetching}>
+            {isFetching ? "Logging in..." : "LOGIN"}
           </Button>
           {error && <Error>Something went wrong! Please try again..</Error>}
 
-          <Link>FORGOT PASSWORD?</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
+          <LinkStyle>FORGOT PASSWORD?</LinkStyle>
+          <Link
+            to="/register"
+            style={{ textDecoration: "none", color: "black" }}>
+            <LinkStyle>CREATE A NEW ACCOUNT</LinkStyle>
+          </Link>
         </Form>
       </Box>
     </Container>

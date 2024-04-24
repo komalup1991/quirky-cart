@@ -1,26 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
 import { publicRequest } from "../auth/AllApi";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
+import { useLocation } from "react-router-dom";
+
+// Add styles for Modal
+Modal.setAppElement("#root"); // Prevents screen readers from reading background content
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    width: "350px", // Adjust as needed
+    height: "350px", // Adjust as needed
+  },
+};
 
 // Styled components defined earlier
-
 const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between; // Ensures that margin doesn't push the 4th image to the next line
+  justify-content: space-between;
   margin: 20px;
 `;
 
-interface Image {
-  id: string;
-  secret: string;
-  server: string;
-  title: string;
-}
 const ImageContainer = styled.div`
-  width: 23%; // Keeps space for margin
+  width: 23%;
   margin: 1%;
+  cursor: pointer; // Indicates that the item is clickable
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
   &:hover {
@@ -30,8 +42,9 @@ const ImageContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  object-fit: contain;
 `;
 
 const Title = styled.div`
@@ -43,13 +56,29 @@ const Title = styled.div`
   border-top: 1px solid #ccc;
 `;
 
+interface Image {
+  id: string;
+  secret: string;
+  server: string;
+  title: string;
+}
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 function ImageGallery() {
   const [images, setImages] = useState<Image[]>([]);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const query = useQuery();
+  const cat = query.get("category");
+  console.log("cat=", cat);
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const res = await publicRequest.get("/flickr/images");
+        //1-mugs,2-bags,3-key rings misc
+
+        const res = await publicRequest.get(`/flickr/images/${cat}`);
         setImages(res.data);
       } catch (err) {
         console.error("Error fetching images:", err);
@@ -58,12 +87,23 @@ function ImageGallery() {
     fetchImages();
   }, []);
 
+  function openModal(img: Image) {
+    setIsOpen(true);
+    setSelectedImage(img);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
   return (
     <div>
       <Navbar />
       <Container>
         {images.map((img, index) => (
-          <ImageContainer key={index}>
+          <ImageContainer
+            key={index}
+            onClick={() => openModal(img)}>
             <Image
               src={`https://live.staticflickr.com/${img.server}/${img.id}_${img.secret}.jpg`}
               alt={img.title}
@@ -72,6 +112,21 @@ function ImageGallery() {
           </ImageContainer>
         ))}
       </Container>
+      {selectedImage && (
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Image Modal">
+          <h2>{selectedImage.title}</h2>
+          <img
+            src={`https://live.staticflickr.com/${selectedImage.server}/${selectedImage.id}_${selectedImage.secret}.jpg`}
+            alt={selectedImage.title}
+            style={{ width: "100%" }}
+          />
+          <button onClick={closeModal}>Close</button>
+        </Modal>
+      )}
     </div>
   );
 }

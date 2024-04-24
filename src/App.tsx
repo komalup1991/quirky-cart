@@ -26,6 +26,7 @@ import Profile from "./user/Profile";
 import UpdateProfile from "./user/UpdateProfile";
 import Wishlist from "./user/Wishlist";
 import ImageGallery from "./flickr/DisplayFickrGallery";
+import OrderDetails from "./order/OrderDetails";
 
 const App = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -111,6 +112,10 @@ const App = () => {
         <Route
           path="/shoppingCart"
           element={<ShoppingCart />}
+        />
+        <Route
+          path="/orderDetails"
+          element={<OrderDetails />}
         />
         <Route
           path="/login"

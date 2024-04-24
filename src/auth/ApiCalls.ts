@@ -112,7 +112,7 @@ export const logout = async (dispatch: Dispatch) => {
 
   dispatch(logoutSuccess());
   persistor
-    .flush()
+    .purge()
     .then(() => {
       console.log("Purged persistor storage");
       //  navigate("/");

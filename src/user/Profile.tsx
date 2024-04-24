@@ -72,41 +72,44 @@ const UpdateButton = styled.button`
 const Profile = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   return (
-    <Container>
-      <Show>
-        <Top>
-          <Image
-            src={user?.profilePic}
-            alt="Profile"
-          />
-          <TopTitle>
-            <h2>
-              {user?.firstName} {user?.lastName}
-            </h2>
-            <p>{user?.username}</p>
-          </TopTitle>
-        </Top>
-        <Bottom>
-          <h3>Account Details</h3>
-          <Info>
-            <PermIdentity className="userShowIcon" />
-            <InfoTitle>{user?.username}</InfoTitle>
-          </Info>
+    <div>
+      <Navbar />
+      <Container>
+        <Show>
+          <Top>
+            <Image
+              src={user?.profilePic}
+              alt="Profile"
+            />
+            <TopTitle>
+              <h2>
+                {user?.firstName} {user?.lastName}
+              </h2>
+              <p>{user?.username}</p>
+            </TopTitle>
+          </Top>
+          <Bottom>
+            <h3>Account Details</h3>
+            <Info>
+              <PermIdentity className="userShowIcon" />
+              <InfoTitle>{user?.username}</InfoTitle>
+            </Info>
 
-          <h3>Contact Details</h3>
-          <Info>
-            <MailOutline className="userShowIcon" />
-            <InfoTitle>{user?.email}</InfoTitle>
-          </Info>
+            <h3>Contact Details</h3>
+            <Info>
+              <MailOutline className="userShowIcon" />
+              <InfoTitle>{user?.email}</InfoTitle>
+            </Info>
 
-          <Link
-            to={`/user/update/${user?.id}`}
-            style={{ textDecoration: "none", textAlign: "center" }}>
-            <UpdateButton>Update Profile</UpdateButton>
-          </Link>
-        </Bottom>
-      </Show>
-    </Container>
+            <Link
+              to={`/user/update/${user?.id}`}
+              style={{ textDecoration: "none", textAlign: "center" }}>
+              <UpdateButton>Update Profile</UpdateButton>
+            </Link>
+          </Bottom>
+        </Show>
+      </Container>
+    </div>
   );
 };
 

@@ -40,7 +40,7 @@ const Box = styled.div`
 
 const AdminHome: React.FC = () => {
   const [userStats, setUserStats] = useState<UserStat[]>([]);
-  console.log(userStats);
+  console.log("userStats=", userStats);
 
   const MONTHS = useMemo(
     () => [
@@ -64,12 +64,14 @@ const AdminHome: React.FC = () => {
     const getStats = async () => {
       try {
         const res = await loggedInUserRequest.get("/users/stats");
-        res.data.map((item: any) =>
-          setUserStats((prev) => [
-            ...prev,
-            { name: MONTHS[item._id - 1], "Active User": item.total },
-          ]),
+        console.log("res.data=", res.data);
+        const newUserStats = res.data.map(
+          (item: { id: number; total: any }) => ({
+            name: MONTHS[item.id - 1],
+            "Active User": item.total,
+          }),
         );
+        setUserStats(newUserStats);
       } catch (err) {
         console.error(err);
       }

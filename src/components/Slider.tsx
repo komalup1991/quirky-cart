@@ -1,19 +1,22 @@
-import React, { useState } from 'react'
-import styled from 'styled-components';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import {transItems} from '../data/data';
+import React, { useState } from "react";
+import styled from "styled-components";
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { Link, To } from "react-router-dom";
+import { transItems } from "../data/data"; // Ensure this path is correct and data is properly typed
 
+// Interfaces for styled components
 interface ArrowProps extends React.HTMLAttributes<HTMLDivElement> {
-    direction: 'left' | 'right';
-  }
+  direction: "left" | "right";
+}
 interface TransProps extends React.HTMLAttributes<HTMLDivElement> {
-    bg: string;
+  background: string;
 }
 interface OuterBoxProps extends React.HTMLAttributes<HTMLDivElement> {
-    slideIndex: number;
-
+  slideIndex: number;
 }
+
+// Styled components
 const OuterBox = styled.div<OuterBoxProps>`
   height: 100%;
   display: flex;
@@ -26,7 +29,7 @@ const Trans = styled.div<TransProps>`
   height: 100vh;
   display: flex;
   align-items: center;
-  background-color: #${(props) => props.bg};
+  background-color: #${(props) => props.background};
 `;
 
 const ContainerPic = styled.div`
@@ -60,17 +63,15 @@ const Button = styled.button`
   background-color: transparent;
   cursor: pointer;
 `;
+
 const Container = styled.div`
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    position: relative;
-    overflow: hidden;
-    // background-color: coral;
-    @media only screen and (max-width: 380px) {
-      display: "none"
-    }
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
 `;
+
 const Arrow = styled.div<ArrowProps>`
   width: 50px;
   height: 50px;
@@ -90,43 +91,54 @@ const Arrow = styled.div<ArrowProps>`
   right: ${(props) => props.direction === "right" && "10px"};
 `;
 
-const Slider = () => {
-    const [slideIndex, setSlideIndex] = useState(0);
-    const handleClick = (direction: string) => {
-      if (direction === "left") {
-        setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2);
-      } else {
-        setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
-      }
-    };
+// Main Slider component
+const Slider: React.FC = () => {
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  const handleClick = (direction: "left" | "right") => {
+    if (direction === "left") {
+      setSlideIndex(slideIndex > 0 ? slideIndex - 1 : transItems.length - 1);
+    } else {
+      setSlideIndex(slideIndex < transItems.length - 1 ? slideIndex + 1 : 0);
+    }
+  };
 
   return (
-    <div>
-        <Container>
-           <Arrow direction="left" onClick={() => handleClick("left")}>
-                <ArrowLeftIcon/>
-           </Arrow>
+    <Container>
+      <Arrow
+        direction="left"
+        onClick={() => handleClick("left")}>
+        <ArrowLeftIcon />
+      </Arrow>
+      <OuterBox slideIndex={slideIndex}>
+        {transItems.map((item) => (
+          <Trans
+            background={item.background}
+            key={item.id}>
+            <ContainerPic>
+              <Pic
+                src={item.img}
+                alt={item.title}
+              />
+            </ContainerPic>
+            <ContainerDesc>
+              <Heading>{item.title}</Heading>
+              <Desc>{item.desc}</Desc>
+              <Link
+                to={`/flickr?category=${encodeURIComponent(item.category)}`}>
+                <Button>EXPLORE</Button>
+              </Link>
+            </ContainerDesc>
+          </Trans>
+        ))}
+      </OuterBox>
+      <Arrow
+        direction="right"
+        onClick={() => handleClick("right")}>
+        <ArrowRightIcon />
+      </Arrow>
+    </Container>
+  );
+};
 
-              <OuterBox slideIndex={slideIndex}> 
-              {transItems.map((item) => (
-                        <Trans bg={item.bg} key={item.id}>
-                            <ContainerPic>
-                                <Pic  src={item.img} alt="" />
-                            </ContainerPic> 
-                            <ContainerDesc>
-                                <Heading>{item.title}</Heading>
-                                <Desc>{item.desc}</Desc>
-                                <Button>SHOP NOW</Button>
-                            </ContainerDesc>
-                        </Trans>
-              ))}
-              </OuterBox>
-           <Arrow direction="right" onClick={() => handleClick("right")}>
-                <ArrowRightIcon/>
-           </Arrow>
-        </Container>
-    </div>
-  )
-}
-
-export default Slider
+export default Slider;
