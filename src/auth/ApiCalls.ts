@@ -105,17 +105,21 @@ export const register = async (
   }
 };
 
-export const logout = (
-  dispatch: Dispatch,
-  navigate: (path: string) => void,
-) => {
+export const logout = async (dispatch: Dispatch) => {
+  console.log("Clearing local storage");
   localStorage.clear();
-  dispatch(logoutSuccess());
+  console.log("Local storage cleared");
 
-  persistor.purge().then(() => {
-    console.log("Purged persistor storage");
-    navigate("/");
-  });
+  dispatch(logoutSuccess());
+  persistor
+    .flush()
+    .then(() => {
+      console.log("Purged persistor storage");
+      //  navigate("/");
+    })
+    .catch((error) => {
+      console.error("Failed to purge persistor:", error);
+    });
 };
 
 export const getProducts = async (dispatch: Dispatch) => {

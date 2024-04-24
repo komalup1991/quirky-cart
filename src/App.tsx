@@ -25,6 +25,7 @@ import HandleProducts from "./admin/handleProducts";
 import Profile from "./user/Profile";
 import UpdateProfile from "./user/UpdateProfile";
 import Wishlist from "./user/Wishlist";
+import ImageGallery from "./flickr/DisplayFickrGallery";
 
 const App = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
@@ -79,6 +80,10 @@ const App = () => {
             />
           </>
         )}
+        <Route
+          path="/flickr"
+          element={<ImageGallery />}
+        />
         <Route
           path="/user/:userId"
           element={<Profile />}
