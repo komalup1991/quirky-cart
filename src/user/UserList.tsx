@@ -68,13 +68,19 @@ export default function UserList() {
       headerName: "UserName",
       width: 200,
       renderCell: (params: any) => (
-        <UserListItem>
-          <UserListImg
-            src={params.row.profilePic}
-            alt=""
-          />
-          {params.row.username}
-        </UserListItem>
+        <Link to={`/user/${params.id}`}>
+          <UserListItem>
+            <UserListImg
+              src={
+                params.row.profilePic
+                  ? params.row.profilePic
+                  : "https://www.shareicon.net/data/128x128/2016/05/24/770042_people_512x512.png"
+              }
+              alt=""
+            />
+            {params.row.username}
+          </UserListItem>
+        </Link>
       ),
     },
     {
@@ -106,8 +112,8 @@ export default function UserList() {
   }
   const navigate = useNavigate();
   const handleRowClick = (params: { id: any }) => {
-    console.log("params.id: ", params.id);
-    navigate(`/user/${params.id}`);
+    // console.log("params.id: ", params.id);
+    // navigate(`/user/${params.id}`);
   };
 
   return (

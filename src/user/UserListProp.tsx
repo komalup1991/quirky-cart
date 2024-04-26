@@ -43,7 +43,11 @@ const UserListProp: React.FC<UserListProps> = ({ users }) => {
       renderCell: (params: any) => (
         <UserListItem>
           <UserListImg
-            src={params.row.profilePic}
+            src={
+              params.row.profilePic
+                ? params.row.profilePic
+                : "https://www.shareicon.net/data/128x128/2016/05/24/770042_people_512x512.png"
+            }
             alt=""
           />
           {params.row.username}

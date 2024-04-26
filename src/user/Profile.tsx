@@ -7,12 +7,13 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { getFollowers, getFollowing, getUserProfile } from "../auth/ApiCalls";
 import UserListProp from "./UserListProp";
+import { Box } from "@mui/material";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
 `;
 
 const Show = styled.div`
@@ -97,7 +98,6 @@ const Profile = () => {
   console.log("currentUser", currentUser?.firstName);
   const following = userState.following.filter((f) => f.id === user?.id);
   const isFollowing = following.length > 0;
-  console.log("USER STATE  + ", userState.following, following);
 
   useEffect(() => {
     // console.log("useEffect called getUserProfile:= ", id);
@@ -111,13 +111,17 @@ const Profile = () => {
   }, [dispatch, id]);
 
   return (
-    <div>
+    <Box>
       <Navbar />
       <Container>
         <Show>
           <Top>
             <Image
-              src={user?.profilePic}
+              src={
+                user?.profilePic
+                  ? user?.profilePic
+                  : "https://www.shareicon.net/data/128x128/2016/05/24/770042_people_512x512.png"
+              }
               // alt="Profile"
             />
             <TopTitle>
@@ -178,7 +182,7 @@ const Profile = () => {
           </Bottom>
         </Show>
       </Container>
-    </div>
+    </Box>
   );
 };
 

@@ -112,7 +112,13 @@ const NavbarFlickr = () => {
               <Link
                 to={`/user/${user.currentUser.id}`}
                 style={{ textDecoration: "none", color: "black" }}>
-                <Pic src={user.currentUser.profilePic} />
+                <Pic
+                  src={
+                    user.currentUser.profilePic
+                      ? user.currentUser.profilePic
+                      : "https://www.shareicon.net/data/128x128/2016/05/24/770042_people_512x512.png"
+                  }
+                />
               </Link>
               <span>WELCOME, {user.currentUser.username}</span>
             </>
