@@ -1,5 +1,11 @@
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  HashRouter,
+} from "react-router-dom";
 import Home from "./home/Home";
 import AllProducts from "./products/AllProducts";
 import SingleProductDetail from "./products/SingleProductDetail";
@@ -38,7 +44,7 @@ const App = () => {
   const isAdmin = user && user.role === "admin";
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {isAdmin && (
           <>
@@ -144,7 +150,7 @@ const App = () => {
           element={<PaymentSuccess />}
         />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
