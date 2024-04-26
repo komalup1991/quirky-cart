@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { CleanHands, DeleteOutline } from "@mui/icons-material";
+import { Link, useNavigate } from "react-router-dom";
+import { DeleteOutline } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
-import { getUsers, followUser, getUserList } from "../auth/ApiCalls";
+import { getUserList, followUser } from "../auth/ApiCalls";
 import { RootState } from "../redux/store";
 import Navbar from "../components/Navbar";
-import AdminNavbar from "../components/adminComponents/AdminNavbar";
-import AdminSidebar from "../components/adminComponents/AdminSidebar";
-import { GridRenderCellParams } from "@mui/x-data-grid";
 
 // Styled components
 const UserListDisplay = styled.div`
@@ -36,6 +33,7 @@ const UserListDeleteIcon = styled(DeleteOutline)`
   cursor: pointer;
   color: red;
 `;
+
 const Left = styled.div`
   flex: 1;
 `;
@@ -48,6 +46,7 @@ const Right = styled.div`
 const Box = styled.div`
   display: flex;
 `;
+
 export default function UserList() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
@@ -55,12 +54,13 @@ export default function UserList() {
 
   useEffect(() => {
     getUserList(dispatch, currentUser?.id);
-  }, [dispatch]);
+  }, [dispatch, currentUser?.id]);
 
   const followUnfollowUser = (id: string, isFollowing: boolean) => {
     followUser(dispatch, id, isFollowing);
   };
 
+  // Dynamically generate columns based on login status
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -87,31 +87,34 @@ export default function UserList() {
       headerName: "Last Name",
       width: 160,
     },
-    {
+  ];
+
+  if (currentUser) {
+    columns.push({
       field: "action",
       headerName: "Action",
       width: 150,
-      renderCell: (params: any) => (
-        <>
-          {/* <Link to={`/user/updateUserProfile/${params.row.id}`}> */}
-          <UserListEditButton
-            onClick={() =>
-              followUnfollowUser(params.row.id, params.row.isFollowing)
-            }>
-            {params.row.isFollowing ? "Unfollow" : "Follow"}
-          </UserListEditButton>
-          {/* </Link> */}
-        </>
+      renderCell: (params) => (
+        <UserListEditButton
+          onClick={() =>
+            followUnfollowUser(params.row.id, params.row.isFollowing)
+          }>
+          {params.row.isFollowing ? "Unfollow" : "Follow"}
+        </UserListEditButton>
       ),
-    },
-  ];
+    });
+  }
+  const navigate = useNavigate();
+  const handleRowClick = (params: { id: any }) => {
+    console.log("params.id: ", params.id);
+    navigate(`/user/${params.id}`);
+  };
 
   return (
     <div>
       <Navbar />
-
       <Box>
-        <Left></Left>
+        <Left />
         <Middle>
           <UserListDisplay>
             <DataGrid
@@ -119,10 +122,14 @@ export default function UserList() {
               disableRowSelectionOnClick
               columns={columns}
               getRowId={(row) => row.id}
+              onRowClick={handleRowClick}
+              //  pageSize={5}
+              // rowsPerPageOptions={[5]}
+              // checkboxSelection
             />
           </UserListDisplay>
         </Middle>
-        <Right></Right>
+        <Right />
       </Box>
     </div>
   );

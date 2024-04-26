@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 export interface User {
   id: number;
   username: string;
@@ -63,7 +62,8 @@ const userSlice = createSlice({
       state.accessToken = "";
       state.isFetching = false;
       state.error = false;
-      window.location.href = "/login";
+
+      window.location.href = "/";
     },
     getUserStart: (state) => {
       state.isFetching = true;

@@ -93,7 +93,8 @@ const Profile = () => {
   const id = useLocation().pathname.split("/")[2];
   const user = userState.profileUser;
   const isLoggedInUser = userState.currentUser?.id === user?.id;
-
+  const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  console.log("currentUser", currentUser?.firstName);
   const following = userState.following.filter((f) => f.id === user?.id);
   const isFollowing = following.length > 0;
   console.log("USER STATE  + ", userState.following, following);
@@ -156,19 +157,23 @@ const Profile = () => {
             ) : (
               ""
             )}
-
-            <h3>Following</h3>
-            {userState.following.length > 0 ? (
-              <UserListProp users={userState.following} />
+            {currentUser ? (
+              <>
+                <h3>Following</h3>
+                {userState.following.length > 0 ? (
+                  <UserListProp users={userState.following} />
+                ) : (
+                  "Not following anyone!"
+                )}
+                <h3>Followers</h3>
+                {userState.followers.length > 0 ? (
+                  <UserListProp users={userState.followers} />
+                ) : (
+                  "No Followers yet!"
+                )}
+              </>
             ) : (
-              "You are not following anyone!"
-            )}
-
-            <h3>Followers</h3>
-            {userState.followers.length > 0 ? (
-              <UserListProp users={userState.followers} />
-            ) : (
-              "No Followers yet!"
+              ""
             )}
           </Bottom>
         </Show>

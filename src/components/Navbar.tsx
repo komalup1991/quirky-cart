@@ -187,11 +187,15 @@ const Navbar = () => {
           )}
           <Link to="/shoppingCart">
             <MenuItem>
-              <Badge
-                badgeContent={quantity}
-                color="primary">
+              {user.currentUser ? (
+                <Badge
+                  badgeContent={quantity}
+                  color="primary">
+                  <ShoppingCartIcon color="action" />
+                </Badge>
+              ) : (
                 <ShoppingCartIcon color="action" />
-              </Badge>
+              )}
             </MenuItem>
           </Link>
         </RightDiv>

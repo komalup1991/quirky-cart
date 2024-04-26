@@ -208,7 +208,7 @@ export const getUserProfile = async (dispatch: Dispatch, id?: string) => {
   //  dispatch(getUserProfileStart());
   try {
     console.log("loggedInUserRequest = ", loggedInUserRequest);
-    const res = await loggedInUserRequest.get(`/users/${id}`);
+    const res = await publicRequest.get(`/users/${id}`);
     console.log("response = ", res.data);
     dispatch(getUserProfileSuccess(res.data));
   } catch (err) {
@@ -219,7 +219,17 @@ export const getUserProfile = async (dispatch: Dispatch, id?: string) => {
 export const getUserList = async (dispatch: Dispatch, id?: number) => {
   dispatch(getUserStart());
   try {
-    const res = await loggedInUserRequest.get(`/users/userList/${id}`);
+    const res = await publicRequest.get(`/users/userList/${id}`);
+    console.log(res);
+    dispatch(getUserSuccess(res.data));
+  } catch (err) {
+    dispatch(getUserFailure());
+  }
+};
+export const getAllUserList = async (dispatch: Dispatch, id?: number) => {
+  dispatch(getUserStart());
+  try {
+    const res = await publicRequest.get(`/users/userList/${id}`);
     console.log(res);
     dispatch(getUserSuccess(res.data));
   } catch (err) {
@@ -301,21 +311,29 @@ export const followUser = async (
 };
 
 export const getFollowing = async (dispatch: Dispatch, followerId?: number) => {
-  console.log("getFollowing = ", followerId);
-  const res = await loggedInUserRequest.get<User[]>(
-    `/users/following/${followerId}`,
-  );
-  const users: User[] = res.data;
-  console.log("getFollowing = ", users);
-  dispatch(setFollowing({ users: users }));
+  try {
+    console.log("getFollowing = ", followerId);
+    const res = await loggedInUserRequest.get<User[]>(
+      `/users/following/${followerId}`,
+    );
+    const users: User[] = res.data;
+    console.log("getFollowing = ", users);
+    dispatch(setFollowing({ users: users }));
+  } catch {
+    console.error("Failed to get user following list");
+  }
 };
 
 export const getFollowers = async (dispatch: Dispatch, followerId?: number) => {
-  const res = await loggedInUserRequest.get<User[]>(
-    `/users/followers/${followerId}`,
-  );
-  const users: User[] = res.data;
-  dispatch(setFollowers({ users: users }));
+  try {
+    const res = await loggedInUserRequest.get<User[]>(
+      `/users/followers/${followerId}`,
+    );
+    const users: User[] = res.data;
+    dispatch(setFollowers({ users: users }));
+  } catch {
+    console.error("Failed to get user follow list");
+  }
 };
 
 export const unfollowUser = async (
