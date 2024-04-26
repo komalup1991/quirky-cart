@@ -27,12 +27,13 @@ import UpdateProfile from "./user/UpdateProfile";
 import Wishlist from "./user/Wishlist";
 import ImageGallery from "./flickr/DisplayFickrGallery";
 import OrderDetails from "./order/OrderDetails";
+import UserList from "./user/UserList";
 
 const App = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const userDetail = useSelector((state: RootState) => state.user);
   // console.log("user: ", JSON.stringify(user));
-  console.log("userAdmin: ", userDetail.currentUser);
+  // console.log("userAdmin: ", userDetail.currentUser);
 
   const isAdmin = user && user.role === "admin";
 
@@ -45,6 +46,7 @@ const App = () => {
               path="/"
               element={<AdminHome />}
             />
+
             <Route
               path="/user/update/:userId"
               element={<UpdateProfile />}
@@ -84,6 +86,10 @@ const App = () => {
         <Route
           path="/flickr"
           element={<ImageGallery />}
+        />
+        <Route
+          path="/userList"
+          element={<UserList />}
         />
         <Route
           path="/user/:userId"

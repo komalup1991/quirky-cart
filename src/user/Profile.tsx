@@ -1,9 +1,12 @@
 import { PermIdentity, MailOutline } from "@mui/icons-material";
 import styled from "styled-components";
 import { RootState } from "../redux/store";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Navbar from "../components/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { getFollowers, getFollowing, getUserProfile } from "../auth/ApiCalls";
+import UserListProp from "./UserListProp";
 
 const Container = styled.div`
   display: flex;
@@ -16,14 +19,13 @@ const Show = styled.div`
   width: 800px;
   padding: 20px;
   height: 600px;
-  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 `;
 
 const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `;
 
 const Image = styled.img`
@@ -69,8 +71,44 @@ const UpdateButton = styled.button`
   }
 `;
 
+const FollowButton = styled.button`
+  border-radius: 5px;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: white;
+  background-color: darkblue;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #001f3f;
+  }
+`;
+
 const Profile = () => {
-  const user = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch();
+  const userState = useSelector((state: RootState) => state.user);
+  const id = useLocation().pathname.split("/")[2];
+  const user = userState.profileUser;
+  const isLoggedInUser = userState.currentUser?.id === user?.id;
+
+  const following = userState.following.filter((f) => f.id === user?.id);
+  const isFollowing = following.length > 0;
+  console.log("USER STATE  + ", userState.following, following);
+
+  useEffect(() => {
+    // console.log("useEffect called getUserProfile:= ", id);
+    getUserProfile(dispatch, id);
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    console.log("useEffect called ff:= ", id);
+    getFollowing(dispatch, parseInt(id));
+    getFollowers(dispatch, parseInt(id));
+  }, [dispatch, id]);
+
   return (
     <div>
       <Navbar />
@@ -79,13 +117,20 @@ const Profile = () => {
           <Top>
             <Image
               src={user?.profilePic}
-              alt="Profile"
+              // alt="Profile"
             />
             <TopTitle>
               <h2>
                 {user?.firstName} {user?.lastName}
               </h2>
               <p>{user?.username}</p>
+              {/* {!isLoggedInUser ? (
+                <FollowButton>
+                  {isFollowing ? "Unfollow" : "Follow"}
+                </FollowButton>
+              ) : (
+                ""
+              )} */}
             </TopTitle>
           </Top>
           <Bottom>
@@ -95,17 +140,36 @@ const Profile = () => {
               <InfoTitle>{user?.username}</InfoTitle>
             </Info>
 
-            <h3>Contact Details</h3>
-            <Info>
-              <MailOutline className="userShowIcon" />
-              <InfoTitle>{user?.email}</InfoTitle>
-            </Info>
+            {isLoggedInUser ? (
+              <>
+                <h3>Contact Details</h3>
+                <Info>
+                  <MailOutline className="userShowIcon" />
+                  <InfoTitle>{user?.email}</InfoTitle>
+                </Info>
+                <Link
+                  to={`/user/update/${user?.id}`}
+                  style={{ textDecoration: "none", textAlign: "center" }}>
+                  <UpdateButton>Update Profile</UpdateButton>
+                </Link>
+              </>
+            ) : (
+              ""
+            )}
 
-            <Link
-              to={`/user/update/${user?.id}`}
-              style={{ textDecoration: "none", textAlign: "center" }}>
-              <UpdateButton>Update Profile</UpdateButton>
-            </Link>
+            <h3>Following</h3>
+            {userState.following.length > 0 ? (
+              <UserListProp users={userState.following} />
+            ) : (
+              "You are not following anyone!"
+            )}
+
+            <h3>Followers</h3>
+            {userState.followers.length > 0 ? (
+              <UserListProp users={userState.followers} />
+            ) : (
+              "No Followers yet!"
+            )}
           </Bottom>
         </Show>
       </Container>

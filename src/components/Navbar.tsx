@@ -152,6 +152,13 @@ const Navbar = () => {
         </MiddleDiv>
 
         <RightDiv>
+          <MenuItem>
+            <Link
+              to="/userList"
+              style={{ textDecoration: "none", color: "black" }}>
+              USER LIST
+            </Link>
+          </MenuItem>
           {user.currentUser ? (
             <MenuItem onClick={handleLogout}>
               <Link

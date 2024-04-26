@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { store } from "./store";
 
 export interface User {
   id: number;
@@ -9,9 +8,10 @@ export interface User {
   role: string;
   email: string;
   profilePic: string;
+  isFollowing?: boolean;
 }
 
-interface UserTokenPair {
+export interface UserTokenPair {
   user: User;
   accessToken: string;
 }
@@ -22,6 +22,9 @@ interface UserState {
   error: boolean;
   accessToken: string;
   users: User[];
+  followers: User[];
+  following: User[];
+  profileUser: User | null;
 }
 
 const initialState: UserState = {
@@ -30,6 +33,9 @@ const initialState: UserState = {
   error: false,
   accessToken: "",
   users: [],
+  followers: [],
+  following: [],
+  profileUser: null,
 };
 
 const userSlice = createSlice({
@@ -121,6 +127,17 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    updateFollowStatus: (state, action: PayloadAction<{ id: string }>) => {
+      state.users = state.users.map((user) => {
+        if (user.id === parseInt(action.payload.id)) {
+          user.isFollowing = !user.isFollowing;
+        }
+        return user;
+      });
+    },
+    getUserProfileSuccess: (state, action: PayloadAction<User>) => {
+      state.profileUser = action.payload;
+    },
     addUserStart: (state) => {
       state.isFetching = true;
       state.error = false;
@@ -156,6 +173,12 @@ const userSlice = createSlice({
       state.accessToken = action.payload;
       state.error = false;
     },
+    setFollowers: (state, action: PayloadAction<{ users: User[] }>) => {
+      state.followers = action.payload.users;
+    },
+    setFollowing: (state, action: PayloadAction<{ users: User[] }>) => {
+      state.following = action.payload.users;
+    },
   },
 });
 
@@ -182,5 +205,9 @@ export const {
   authenticationExpired,
   rememberMeLogin,
   updateOtherUserSuccess,
+  updateFollowStatus,
+  setFollowers,
+  setFollowing,
+  getUserProfileSuccess,
 } = userSlice.actions;
 export default userSlice.reducer;

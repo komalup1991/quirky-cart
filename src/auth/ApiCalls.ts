@@ -17,6 +17,10 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateOtherUserSuccess,
+  updateFollowStatus,
+  setFollowers,
+  setFollowing,
+  getUserProfileSuccess,
 } from "../redux/userRedux";
 import { publicRequest, loggedInUserRequest } from "./AllApi";
 import { Dispatch } from "redux";
@@ -70,8 +74,8 @@ export const login = async (dispatch: Dispatch<any>, user: UserCredentials) => {
   dispatch(loginStart());
   try {
     const res = await publicRequest.post("/auth/login", user);
-
     if (res.status === 200) {
+      console.log("login", res.data);
       dispatch(loginSuccess(res.data));
       return res.data; // Return the user data upon successful login
     } else {
@@ -194,7 +198,29 @@ export const getUsers = async (dispatch: Dispatch) => {
   dispatch(getUserStart());
   try {
     const res = await loggedInUserRequest.get("/users/all");
+    dispatch(getUserSuccess(res.data));
+  } catch (err) {
+    dispatch(getUserFailure());
+  }
+};
 
+export const getUserProfile = async (dispatch: Dispatch, id?: string) => {
+  //  dispatch(getUserProfileStart());
+  try {
+    console.log("loggedInUserRequest = ", loggedInUserRequest);
+    const res = await loggedInUserRequest.get(`/users/${id}`);
+    console.log("response = ", res.data);
+    dispatch(getUserProfileSuccess(res.data));
+  } catch (err) {
+    // dispatch(getUserFailure());
+  }
+};
+
+export const getUserList = async (dispatch: Dispatch, id?: number) => {
+  dispatch(getUserStart());
+  try {
+    const res = await loggedInUserRequest.get(`/users/userList/${id}`);
+    console.log(res);
     dispatch(getUserSuccess(res.data));
   } catch (err) {
     dispatch(getUserFailure());
@@ -257,3 +283,42 @@ export const getWishlist = async (dispatch: Dispatch, userId?: number) => {
     dispatch(getWishlistFailure());
   }
 };
+
+export const followUser = async (
+  dispatch: Dispatch,
+  followeeId: string,
+  isFollowing?: boolean,
+) => {
+  if (!isFollowing) {
+    const res = await loggedInUserRequest.post(`/users/follow/${followeeId}`);
+  } else {
+    const res = await loggedInUserRequest.delete(
+      `/users/unfollow/${followeeId}`,
+    );
+  }
+
+  dispatch(updateFollowStatus({ id: followeeId }));
+};
+
+export const getFollowing = async (dispatch: Dispatch, followerId?: number) => {
+  console.log("getFollowing = ", followerId);
+  const res = await loggedInUserRequest.get<User[]>(
+    `/users/following/${followerId}`,
+  );
+  const users: User[] = res.data;
+  console.log("getFollowing = ", users);
+  dispatch(setFollowing({ users: users }));
+};
+
+export const getFollowers = async (dispatch: Dispatch, followerId?: number) => {
+  const res = await loggedInUserRequest.get<User[]>(
+    `/users/followers/${followerId}`,
+  );
+  const users: User[] = res.data;
+  dispatch(setFollowers({ users: users }));
+};
+
+export const unfollowUser = async (
+  dispatch: Dispatch,
+  followerId?: string,
+) => {};

@@ -118,11 +118,19 @@ const Register = () => {
             onChange={handleInputChange}
           />
           <Input
-            type="text"
+            as="select"
             name="role"
-            placeholder="Role"
             onChange={handleInputChange}
-          />
+            defaultValue="">
+            <option
+              value=""
+              disabled>
+              Select your role
+            </option>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </Input>
+
           <Input
             type="email"
             name="email"

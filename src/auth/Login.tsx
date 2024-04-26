@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { loginStart, loginSuccess, loginFailure } from "../redux/userRedux";
 import { Link, useNavigate } from "react-router-dom";
+import { loggedInUserRequest } from "./AllApi";
 
 const Container = styled.div`
   width: 100vw;
@@ -84,18 +85,11 @@ const Login = () => {
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    dispatch(loginStart());
-    try {
-      const userCredentials = { username, password };
-      const response = await login(dispatch, userCredentials);
-      if (response) {
-        dispatch(loginSuccess(response)); // Assuming response contains user data
-        navigate("/"); // Redirect to dashboard upon successful login
-      } else {
-        dispatch(loginFailure());
-      }
-    } catch (error) {
-      dispatch(loginFailure());
+    const userCredentials = { username, password };
+    const response = await login(dispatch, userCredentials);
+    console.log("LOGIN ++ ", response);
+    if (response) {
+      navigate("/");
     }
   };
 
