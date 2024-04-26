@@ -148,7 +148,7 @@ const ProductDetail: React.FC<ProductProps> = ({ item }) => {
       `${API}cart/c/addToCart/userId=${user?.id}/productId=${item.id}`,
       { quantity: 1 },
     );
-    console.log("add to", res.data);
+
     dispatch(addProduct({ ...products, quantity }));
   };
   return (

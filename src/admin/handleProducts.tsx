@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
-import { Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { loggedInUserRequest } from '../auth/AllApi';
-import { RootState } from '../redux/store';
-import { ProductInterface } from '../redux/productRedux';
-import Navbar from '../components/Navbar';
-import AdminNavbar from '../components/adminComponents/AdminNavbar';
-import AdminSidebar from '../components/adminComponents/AdminSidebar';
+import React, { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { loggedInUserRequest } from "../auth/AllApi";
+import { RootState } from "../redux/store";
+import { ProductInterface } from "../redux/productRedux";
+import Navbar from "../components/Navbar";
+import AdminNavbar from "../components/adminComponents/AdminNavbar";
+import AdminSidebar from "../components/adminComponents/AdminSidebar";
 
 // Styled components
 const ProductContainer = styled.div`
@@ -139,14 +139,14 @@ const ProductButton = styled.button`
   cursor: pointer;
 `;
 const Left = styled.div`
-    flex: 1;
-    `;
+  flex: 1;
+`;
 const Right = styled.div`
-    flex: 4;
-    `;
-    const Box = styled.div`
-    display: flex;`;
-
+  flex: 4;
+`;
+const Box = styled.div`
+  display: flex;
+`;
 
 type StatsItem = {
   id: number;
@@ -155,29 +155,48 @@ type StatsItem = {
 
 const HandleProducts: React.FC = () => {
   const location = useLocation();
-  const productId = location.pathname.split('/')[2];
-  console.log(productId);
-  const [pStats, setPStats] = useState<Array<{ name: string; Sales: number }>>([]);
-  const products = useSelector((state: RootState) => state.product.products);
-  const product = products.find((p: ProductInterface) => JSON.stringify(p.id) === productId);
+  const productId = location.pathname.split("/")[2];
 
-  const MONTHS = useMemo(() => [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ], []);
+  const [pStats, setPStats] = useState<Array<{ name: string; Sales: number }>>(
+    [],
+  );
+  const products = useSelector((state: RootState) => state.product.products);
+  const product = products.find(
+    (p: ProductInterface) => JSON.stringify(p.id) === productId,
+  );
+
+  const MONTHS = useMemo(
+    () => [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    [],
+  );
 
   useEffect(() => {
     const getStats = async () => {
       try {
-        const res = await loggedInUserRequest.get("orders/income?pid=" + productId);
-        const list = res.data.sort((a: { id: number; },b: { id: number; })=>{
-            return a.id - b.id
-        })
-        list.map((item: { _id: number; total: any; }) =>
+        const res = await loggedInUserRequest.get(
+          "orders/income?pid=" + productId,
+        );
+        const list = res.data.sort((a: { id: number }, b: { id: number }) => {
+          return a.id - b.id;
+        });
+        list.map((item: { _id: number; total: any }) =>
           setPStats((prev) => [
             ...prev,
             { name: MONTHS[item._id - 1], Sales: item.total },
-          ])
+          ]),
         );
       } catch (err) {
         console.log(err);
@@ -186,79 +205,95 @@ const HandleProducts: React.FC = () => {
     getStats();
   }, [productId, MONTHS]);
 
-
   return (
     <div>
-       <Navbar/>
-    <AdminNavbar/>
-    <Box>
+      <Navbar />
+      <AdminNavbar />
+      <Box>
         <Left>
-        <AdminSidebar/>
+          <AdminSidebar />
         </Left>
         <Right>
-      <ProductContainer>
-      <ProductTitleContainer>
-        <h1>Product</h1>
-        <Link to="/addProduct">
-          <ProductAddButton>Create</ProductAddButton>
-        </Link>
-      </ProductTitleContainer>
-      <ProductTop>
-        <ProductTopLeft>
-          {/* Placeholder for Chart component */}
-        </ProductTopLeft>
-        <ProductTopRight>
-          <ProductInfoTop>
-            <ProductInfoImg src={product?.image || ''} alt="" />
-            <ProductName>{product?.name}</ProductName>
-          </ProductInfoTop>
-          <ProductInfoBottom>
-            <ProductInfoItem>
-              <span>id:</span>
-              <ProductInfoValue>{product?.id}</ProductInfoValue>
-            </ProductInfoItem>
-            <ProductInfoItem>
-              <span>sales:</span>
-              <ProductInfoValue>{/* Placeholder for sales value */}</ProductInfoValue>
-            </ProductInfoItem>
-            {/* <ProductInfoItem>
+          <ProductContainer>
+            <ProductTitleContainer>
+              <h1>Product</h1>
+              <Link to="/addProduct">
+                <ProductAddButton>Create</ProductAddButton>
+              </Link>
+            </ProductTitleContainer>
+            <ProductTop>
+              <ProductTopLeft>
+                {/* Placeholder for Chart component */}
+              </ProductTopLeft>
+              <ProductTopRight>
+                <ProductInfoTop>
+                  <ProductInfoImg
+                    src={product?.image || ""}
+                    alt=""
+                  />
+                  <ProductName>{product?.name}</ProductName>
+                </ProductInfoTop>
+                <ProductInfoBottom>
+                  <ProductInfoItem>
+                    <span>id:</span>
+                    <ProductInfoValue>{product?.id}</ProductInfoValue>
+                  </ProductInfoItem>
+                  <ProductInfoItem>
+                    <span>sales:</span>
+                    <ProductInfoValue>
+                      {/* Placeholder for sales value */}
+                    </ProductInfoValue>
+                  </ProductInfoItem>
+                  {/* <ProductInfoItem>
               <span>in stock:</span>
               <ProductInfoValue>{product?.inStock ? 'Yes' : 'No'}</ProductInfoValue>
             </ProductInfoItem> */}
-          </ProductInfoBottom>
-        </ProductTopRight>
-      </ProductTop>
-      <ProductBottom>
-        <ProductForm>
-          <ProductFormLeft>
-            <Label>Product Name</Label>
-            <Input type="text" placeholder={product?.name} />
-            <Label>Product Description</Label>
-            <Input type="text" placeholder={product?.description} />
-            <Label>Price</Label>
-            {/* <Input type="number" placeholder={product?.price} /> */}
-            {/* <Label>In Stock</Label>
+                </ProductInfoBottom>
+              </ProductTopRight>
+            </ProductTop>
+            <ProductBottom>
+              <ProductForm>
+                <ProductFormLeft>
+                  <Label>Product Name</Label>
+                  <Input
+                    type="text"
+                    placeholder={product?.name}
+                  />
+                  <Label>Product Description</Label>
+                  <Input
+                    type="text"
+                    placeholder={product?.description}
+                  />
+                  <Label>Price</Label>
+                  {/* <Input type="number" placeholder={product?.price} /> */}
+                  {/* <Label>In Stock</Label>
             <Select name="inStock" id="idStock" defaultValue={product?.inStock ? 'true' : 'false'}>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </Select> */}
-          </ProductFormLeft>
-          <ProductFormRight>
-            <ProductUpload>
-              <ProductUploadImg src={product?.image || ''} alt="" />
-              <Label htmlFor="file">Upload</Label>
-              <Input type="file" id="file" style={{ display: "none" }} />
-            </ProductUpload>
-            <ProductButton>Update</ProductButton>
-          </ProductFormRight>
-        </ProductForm>
-      </ProductBottom>
-    </ProductContainer>
-    </Right>
-    </Box>
+                </ProductFormLeft>
+                <ProductFormRight>
+                  <ProductUpload>
+                    <ProductUploadImg
+                      src={product?.image || ""}
+                      alt=""
+                    />
+                    <Label htmlFor="file">Upload</Label>
+                    <Input
+                      type="file"
+                      id="file"
+                      style={{ display: "none" }}
+                    />
+                  </ProductUpload>
+                  <ProductButton>Update</ProductButton>
+                </ProductFormRight>
+              </ProductForm>
+            </ProductBottom>
+          </ProductContainer>
+        </Right>
+      </Box>
     </div>
-    
   );
-}
+};
 
 export default HandleProducts;

@@ -31,7 +31,6 @@ const UserListEditButton = styled("button")({
 const UserListProp: React.FC<UserListProps> = ({ users }) => {
   const navigate = useNavigate();
   const handleRowClick = (params: { id: any }) => {
-    console.log("params.id: ", params.id);
     navigate(`/user/${params.id}`);
   };
   const columns: GridColDef[] = [

@@ -93,12 +93,10 @@ const Profile = () => {
   const userState = useSelector((state: RootState) => state.user);
   const id = useLocation().pathname.split("/")[2];
   const user = userState.profileUser;
-  console.log("userState.currentUser?.id", userState.currentUser?.id);
-  console.log("user?.id", user?.id);
+
   const hasValidUser = user !== null && user !== undefined;
   const isLoggedInUser = userState.currentUser?.id === user?.id && hasValidUser;
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  console.log("isLoggedInUser", isLoggedInUser);
 
   const hasValidFollowData =
     userState !== null &&
@@ -119,13 +117,10 @@ const Profile = () => {
   const isFollowing = following.length > 0;
 
   useEffect(() => {
-    console.log("useEffect called getUserProfile:= ", id);
-
     getUserProfile(dispatch, id);
   }, [dispatch, id]);
 
   useEffect(() => {
-    console.log("useEffect called ff:= ", id);
     getFollowing(dispatch, parseInt(id));
     getFollowers(dispatch, parseInt(id));
   }, [dispatch, id]);

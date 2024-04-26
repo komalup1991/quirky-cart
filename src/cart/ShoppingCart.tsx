@@ -195,7 +195,7 @@ const ShoppingCart = () => {
         const res = await loggedInUserRequest.get(
           `${API}cart/userId=${user?.id}`,
         );
-        console.log("getProductsForCart = ", res.data);
+
         dispatch(updateCart(res.data));
       } catch (err) {}
     };
@@ -207,7 +207,7 @@ const ShoppingCart = () => {
       `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`,
       { quantity: 1 },
     );
-    console.log("addToCart = ", res);
+
     dispatch(setTotalQuantity(shoppingCart.totalQuantity + 1));
   };
 
@@ -219,16 +219,9 @@ const ShoppingCart = () => {
       `${API}cart/userId=${user?.id}/productId=${productId}`,
       { quantity: quantity },
     );
-    console.log("updateProductQuantityInCart = ", res);
+
     dispatch(setTotalQuantity(shoppingCart.totalQuantity - quantity));
   };
-
-  // const removeFromCart  = async (productId: number) => {
-  //     const res = await loggedInUserRequest.post(
-  //       `${API}cart//cart/userId=${user?.id}/productId=${productId}`, { "quantity": 1 }
-  //     );
-  //     dispatch(setTotalQuantity(shoppingCart.totalQuantity - 1))
-  // }
 
   return (
     <Container>

@@ -199,7 +199,7 @@ const HandleUsers: React.FC = () => {
             id: userId,
             role: userRole,
           };
-          console.log("updateduser", updatedUser);
+
           updateOtherUser(updatedUser, dispatch);
         });
       },

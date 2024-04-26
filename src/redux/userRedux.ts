@@ -56,7 +56,6 @@ const userSlice = createSlice({
       state.error = true;
     },
     logoutSuccess: (state) => {
-      console.log("in logout");
       localStorage.clear();
       state.currentUser = null;
       state.accessToken = "";
@@ -116,7 +115,7 @@ const userSlice = createSlice({
       const index = state.users.findIndex(
         (user) => user.id === action.payload.id,
       );
-      console.log("index ", index);
+
       if (index !== -1) {
         state.users[index] = action.payload.user;
       }

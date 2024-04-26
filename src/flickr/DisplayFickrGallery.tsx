@@ -72,7 +72,6 @@ function ImageGallery() {
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
   const query = useQuery();
   const cat = query.get("category");
-  console.log("cat=", cat);
 
   useEffect(() => {
     const fetchImages = async () => {

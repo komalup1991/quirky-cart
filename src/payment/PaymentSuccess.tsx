@@ -14,7 +14,6 @@ interface AppState {
 
 const PaymentSuccess = () => {
   const location = useLocation();
-  console.log(location);
   const data = location.state.stripeData;
   const cart = location.state.cart;
   const currentUser = useSelector((state: AppState) => state.user.currentUser);

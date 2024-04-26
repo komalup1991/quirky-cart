@@ -38,8 +38,6 @@ import UserList from "./user/UserList";
 const App = () => {
   const user = useSelector((state: RootState) => state.user.currentUser);
   const userDetail = useSelector((state: RootState) => state.user);
-  // console.log("user: ", JSON.stringify(user));
-  // console.log("userAdmin: ", userDetail.currentUser);
 
   const isAdmin = user && user.role === "admin";
 

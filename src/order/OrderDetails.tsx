@@ -211,7 +211,7 @@ const OrderDetails = () => {
         const res = await loggedInUserRequest.get(
           `${API}cart/userId=${user?.id}`,
         );
-        console.log("getProductsForCart = ", res.data);
+
         dispatch(updateCart(res.data));
       } catch (err) {}
     };
@@ -223,7 +223,7 @@ const OrderDetails = () => {
       `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`,
       { quantity: 1 },
     );
-    console.log("addToCart = ", res);
+
     dispatch(setTotalQuantity(shoppingCart.totalQuantity + 1));
   };
 
@@ -235,7 +235,7 @@ const OrderDetails = () => {
       `${API}cart/userId=${user?.id}/productId=${productId}`,
       { quantity: quantity },
     );
-    console.log("updateProductQuantityInCart = ", res);
+
     dispatch(setTotalQuantity(shoppingCart.totalQuantity - quantity));
   };
 

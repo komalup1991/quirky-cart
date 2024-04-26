@@ -81,13 +81,12 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isFetching, error } = useSelector((state: RootState) => state.user);
-  console.log("isFetching in render = ", isFetching);
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const userCredentials = { username, password };
     const response = await login(dispatch, userCredentials);
-    console.log("LOGIN ++ ", response);
+
     if (response) {
       navigate("/");
     }

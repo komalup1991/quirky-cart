@@ -22,7 +22,6 @@ const ProductList: React.FC<ProductListProps> = ({
   filters,
   sort,
 }) => {
-  // console.log(category, filters, sort);
   const [products, setProducts] = useState([]);
   const [filterProducts, setFilterProducts] = useState<ProductInterface[]>([]);
   useEffect(() => {

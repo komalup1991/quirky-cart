@@ -111,10 +111,7 @@ export default function UserList() {
     });
   }
   const navigate = useNavigate();
-  const handleRowClick = (params: { id: any }) => {
-    // console.log("params.id: ", params.id);
-    // navigate(`/user/${params.id}`);
-  };
+  const handleRowClick = (params: { id: any }) => {};
 
   return (
     <div>

@@ -123,7 +123,7 @@ const UpdateProfile = () => {
             id: userId,
             role: userRole,
           };
-          console.log("updateduser", updatedUser);
+
           updateUser(updatedUser, dispatch);
         });
       },

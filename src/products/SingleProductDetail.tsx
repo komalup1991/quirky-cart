@@ -160,7 +160,7 @@ const SingleProductDetail: React.FC = () => {
       `${API}cart/c/addToCart/userId=${user?.id}/productId=${productId}`,
       { quantity: quantity },
     );
-    console.log("add to", res.data);
+
     dispatch(addProduct({ ...products, quantity }));
   };
   return (
