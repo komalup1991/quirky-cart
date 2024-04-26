@@ -197,7 +197,7 @@ export const updateOtherUser = async (user: User, dispatch: Dispatch) => {
 export const getUsers = async (dispatch: Dispatch) => {
   dispatch(getUserStart());
   try {
-    const res = await loggedInUserRequest.get("/users/all");
+    const res = await publicRequest.get("/users/all");
     dispatch(getUserSuccess(res.data));
   } catch (err) {
     dispatch(getUserFailure());
@@ -217,6 +217,10 @@ export const getUserProfile = async (dispatch: Dispatch, id?: string) => {
 };
 
 export const getUserList = async (dispatch: Dispatch, id?: number) => {
+  if (id === null || id === undefined) {
+    getUsers(dispatch);
+    return;
+  }
   dispatch(getUserStart());
   try {
     const res = await publicRequest.get(`/users/userList/${id}`);

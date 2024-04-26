@@ -93,14 +93,34 @@ const Profile = () => {
   const userState = useSelector((state: RootState) => state.user);
   const id = useLocation().pathname.split("/")[2];
   const user = userState.profileUser;
-  const isLoggedInUser = userState.currentUser?.id === user?.id;
+  console.log("userState.currentUser?.id", userState.currentUser?.id);
+  console.log("user?.id", user?.id);
+  const hasValidUser = user !== null && user !== undefined;
+  const isLoggedInUser = userState.currentUser?.id === user?.id && hasValidUser;
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
-  console.log("currentUser", currentUser?.firstName);
-  const following = userState.following.filter((f) => f.id === user?.id);
+  console.log("isLoggedInUser", isLoggedInUser);
+
+  const hasValidFollowData =
+    userState !== null &&
+    userState !== undefined &&
+    userState.following !== null &&
+    userState.following !== undefined;
+
+  const hasValidFollowerData =
+    userState !== null &&
+    userState !== undefined &&
+    userState.followers !== null &&
+    userState.followers !== undefined;
+
+  const following =
+    isLoggedInUser && hasValidFollowData
+      ? userState.following.filter((f) => f.id === user?.id)
+      : [];
   const isFollowing = following.length > 0;
 
   useEffect(() => {
-    // console.log("useEffect called getUserProfile:= ", id);
+    console.log("useEffect called getUserProfile:= ", id);
+
     getUserProfile(dispatch, id);
   }, [dispatch, id]);
 
@@ -164,13 +184,13 @@ const Profile = () => {
             {currentUser ? (
               <>
                 <h3>Following</h3>
-                {userState.following.length > 0 ? (
+                {hasValidFollowData && userState.following.length > 0 ? (
                   <UserListProp users={userState.following} />
                 ) : (
                   "Not following anyone!"
                 )}
                 <h3>Followers</h3>
-                {userState.followers.length > 0 ? (
+                {hasValidFollowerData && userState.followers.length > 0 ? (
                   <UserListProp users={userState.followers} />
                 ) : (
                   "No Followers yet!"
