@@ -4,6 +4,7 @@ import { publicRequest } from "../auth/AllApi";
 import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import { useLocation } from "react-router-dom";
+import NavbarFlickr from "./NavbarFlickr";
 
 // Add styles for Modal
 Modal.setAppElement("#root"); // Prevents screen readers from reading background content
@@ -98,7 +99,7 @@ function ImageGallery() {
 
   return (
     <div>
-      <Navbar />
+      <NavbarFlickr />
       <Container>
         {images.map((img, index) => (
           <ImageContainer

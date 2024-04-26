@@ -89,7 +89,7 @@ const Pic = styled.img`
   margin-right: 10px;
 `;
 
-const Navbar = () => {
+const NavbarFlickr = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const quantity = useSelector(
@@ -101,18 +101,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout(dispatch);
   };
-  const handleSearch = (
-    event:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.MouseEvent<SVGSVGElement, MouseEvent>,
-  ) => {
-    if (
-      event.type === "click" ||
-      (event as React.KeyboardEvent).key === "Enter"
-    ) {
-      navigate(`/flickr?category=${encodeURIComponent(searchKeyword)}`);
-    }
-  };
+
   const userId = user.currentUser?.id;
   return (
     <Container>
@@ -128,19 +117,6 @@ const Navbar = () => {
               <span>WELCOME, {user.currentUser.username}</span>
             </>
           ) : null}
-
-          <SearchContainer>
-            <Input
-              value={searchKeyword}
-              placeholder="Search random images!!! mugs, bags colors and more"
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              onKeyPress={handleSearch}
-            />
-            <Search
-              style={{ color: "gray", fontSize: 16 }}
-              onClick={handleSearch}
-            />
-          </SearchContainer>
         </LeftDiv>
 
         <MiddleDiv>
@@ -193,4 +169,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarFlickr;
